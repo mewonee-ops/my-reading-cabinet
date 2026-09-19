@@ -1,71 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Reading Cabinet - Reading Tracker</title>
+    <title>The Reading Cabinet - Personal Book Tracker</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: {
-                            green: '#1e3325',
-                            darkGreen: '#14241a',
-                            lightGreen: '#2e4a37',
-                            cream: '#f5f2eb',
-                            cardCream: '#ebe6dc',
-                            borderCream: '#ded7c8',
-                            gold: '#c5a059',
-                            darkText: '#2c332b',
-                            mutedText: '#6a7368'
-                        }
+                        forest: {
+                            50: '#f2f7f4',
+                            100: '#e1ede6',
+                            700: '#264a38',
+                            800: '#1b3b2b',
+                            900: '#12291e',
+                        },
+                        cream: {
+                            50: '#faf7f2',
+                            100: '#f4efe6',
+                            200: '#e8dfd1',
+                            300: '#d9cbba',
+                        },
+                        wood: {
+                            light: '#795238',
+                            DEFAULT: '#4a2e1b',
+                            dark: '#2c190e',
+                        },
+                        gold: '#d4af37'
                     },
                     fontFamily: {
-                        serif: ['Playfair Display', 'Georgia', 'serif'],
-                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
                     }
                 }
             }
         }
     </script>
+
     <style>
         body {
-            background-color: #f5f2eb;
-            color: #2c332b;
+            background-color: #f4efe6;
+            color: #2c190e;
             font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
-        /* Wooden Bookshelf Styling */
-        .bookshelf-container {
-            background: linear-gradient(180deg, #18100c 0%, #291b13 100%);
+        .serif-title {
+            font-family: 'Playfair Display', Georgia, serif;
+        }
+
+        /* Wood Shelf styling */
+        .shelf-container {
+            background: linear-gradient(135deg, #2a180b 0%, #3d2312 50%, #2a180b 100%);
             border-radius: 8px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-            border: 12px solid #20130c;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 10px 25px rgba(0,0,0,0.15);
+            padding: 24px 20px 0px 20px;
         }
-        
-        .wooden-shelf {
-            background: linear-gradient(180deg, #3d2314 0%, #28170d 60%, #1a0f08 100%);
-            box-shadow: 0 -4px 6px rgba(255,255,255,0.05), inset 0 2px 3px rgba(255,255,255,0.1), 0 8px 15px rgba(0,0,0,0.6);
-            border-top: 3px solid #52311d;
-            border-bottom: 4px solid #120a05;
+
+        .bookshelf-row {
             position: relative;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-end;
+            justify-content: flex-start;
+            gap: 20px;
+            padding-bottom: 12px;
+            margin-bottom: 35px;
+            min-height: 220px;
+            border-bottom: 16px solid #5a3821;
+            box-shadow: 0 8px 12px rgba(0,0,0,0.4), inset 0 3px 0 #7e5030, inset 0 -3px 0 #3b2211;
         }
 
-        .book-shadow {
-            box-shadow: -4px 0px 8px rgba(0,0,0,0.5), 4px 6px 12px rgba(0,0,0,0.4);
-            transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+        .bookshelf-row::after {
+            content: '';
+            position: absolute;
+            bottom: -22px;
+            left: -20px;
+            right: -20px;
+            height: 6px;
+            background: rgba(0,0,0,0.25);
+            filter: blur(3px);
         }
 
-        .book-shadow:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: -6px 8px 18px rgba(0,0,0,0.6), 0 12px 20px rgba(0,0,0,0.3);
+        /* Book Cover Hover Effects */
+        .book-card {
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transform-origin: bottom center;
+        }
+        .book-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.4);
+            z-index: 10;
         }
 
         /* Custom Scrollbar */
@@ -74,752 +108,1556 @@
             height: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #f5f2eb;
+            background: #f4efe6;
         }
         ::-webkit-scrollbar-thumb {
-            background: #c5beaf;
+            background: #1b3b2b;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #1e3325;
+            background: #264a38;
+        }
+
+        .modal-backdrop {
+            background-color: rgba(18, 41, 30, 0.65);
+            backdrop-filter: blur(4px);
         }
     </style>
 </head>
-<body class="h-screen flex flex-col overflow-hidden select-none">
+<body class="min-h-screen flex flex-col md:flex-row antialiased selection:bg-forest-700 selection:text-white">
 
-    <div class="flex h-full w-full overflow-hidden">
-        
-        <!-- Sidebar Navigation -->
-        <aside class="w-64 bg-brand-green text-brand-cream flex flex-col justify-between p-6 shrink-0 shadow-xl z-20">
-            <div>
-                <!-- Brand / Title -->
-                <div class="mb-10 flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-brand-gold/20 flex items-center justify-center border border-brand-gold/40">
-                        <i class="fa-solid fa-book-bookmark text-brand-gold text-lg"></i>
-                    </div>
-                    <div>
-                        <h1 class="font-serif text-xl font-bold tracking-tight leading-tight">The Reading Cabinet</h1>
-                        <p class="text-xs text-brand-gold/80 italic font-serif">Books, notes & connections</p>
-                    </div>
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-64 bg-forest-800 text-cream-100 flex-shrink-0 flex flex-col justify-between border-r border-forest-900/50 shadow-xl z-20">
+        <div>
+            <!-- Logo / Brand Header -->
+            <div class="p-6 border-b border-forest-700/60 flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-cream-100 text-forest-800 flex items-center justify-center font-serif font-bold text-xl shadow-inner">
+                    <i class="fa-solid me-0.5 fa-book-bookmark text-forest-800 text-lg"></i>
                 </div>
-
-                <!-- Navigation Links -->
-                <nav class="space-y-1.5">
-                    <button onclick="switchView('library')" id="nav-library" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all bg-brand-lightGreen text-white shadow-sm">
-                        <i class="fa-solid fa-shelves text-brand-gold w-5"></i>
-                        <span>My Library</span>
-                    </button>
-                    <button onclick="switchView('notes')" id="nav-notes" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-brand-cream/80 hover:bg-brand-lightGreen/50 hover:text-white">
-                        <i class="fa-solid fa-quote-left text-brand-gold/70 w-5"></i>
-                        <span>All Notes</span>
-                    </button>
-                    <button onclick="switchView('overview')" id="nav-overview" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-brand-cream/80 hover:bg-brand-lightGreen/50 hover:text-white">
-                        <i class="fa-solid fa-chart-pie text-brand-gold/70 w-5"></i>
-                        <span>Reading Overview</span>
-                    </button>
-                    <button onclick="switchView('backup')" id="nav-backup" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-brand-cream/80 hover:bg-brand-lightGreen/50 hover:text-white">
-                        <i class="fa-solid fa-floppy-disk text-brand-gold/70 w-5"></i>
-                        <span>Help & Backup</span>
-                    </button>
-                </nav>
+                <div>
+                    <h1 class="serif-title font-bold text-lg tracking-wide text-cream-50 leading-tight">The Reading Cabinet</h1>
+                    <p class="text-xs text-cream-300 font-light tracking-wider uppercase">PlannerCatCo Style</p>
+                </div>
             </div>
 
-            <!-- Footer / Status info -->
-            <div class="pt-6 border-t border-brand-lightGreen/60 text-xs text-brand-cream/60 space-y-2">
-                <div class="flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>Saved on this device</span>
-                </div>
-                <p class="text-[11px] opacity-75">PlannerCatCo HTML Edition</p>
+            <!-- Nav Links -->
+            <nav class="p-4 space-y-1">
+                <button onclick="switchTab('library')" id="nav-library" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors bg-forest-700 text-cream-50 shadow-sm">
+                    <i class="fa-solid fa-books text-base w-5 text-center"></i>
+                    <span>My Library</span>
+                </button>
+                <button onclick="switchTab('notes')" id="nav-notes" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-forest-700/50 text-cream-200">
+                    <i class="fa-solid fa-note-sticky text-base w-5 text-center"></i>
+                    <span>All Notes & Ideas</span>
+                </button>
+                <button onclick="switchTab('overview')" id="nav-overview" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-forest-700/50 text-cream-200">
+                    <i class="fa-solid fa-chart-pie text-base w-5 text-center"></i>
+                    <span>Reading Overview</span>
+                </button>
+                <button onclick="switchTab('backup')" id="nav-backup" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors hover:bg-forest-700/50 text-cream-200">
+                    <i class="fa-solid fa-floppy-disk text-base w-5 text-center"></i>
+                    <span>Help & Backup</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-forest-700/60 text-xs text-cream-300/80 flex flex-col gap-1">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Saved locally on device</span>
             </div>
-        </aside>
+            <p class="mt-1 text-[10px] text-cream-300/50">Inspired by Vintage Library Trackers</p>
+        </div>
+    </aside>
 
-        <main class="flex-1 flex flex-col h-full bg-brand-cream overflow-y-auto">
-            
-            <!-- Top Controls Header -->
-            <header class="sticky top-0 z-10 bg-brand-cream/90 backdrop-blur-md px-8 py-5 border-b border-brand-borderCream flex flex-wrap items-center justify-between gap-4">
-                <div class="flex items-center gap-4 flex-1 max-w-xl">
-                    <h2 id="page-title" class="font-serif text-2xl font-bold text-brand-darkText mr-2">My Library</h2>
-                    
-                    <!-- Search Input -->
-                    <div class="relative flex-1">
-                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-mutedText text-xs"></i>
-                        <input type="text" id="search-input" oninput="renderApp()" placeholder="Title, author, or tag..." class="w-full bg-brand-cardCream/60 border border-brand-borderCream rounded-lg pl-9 pr-4 py-2 text-sm text-brand-darkText placeholder-brand-mutedText focus:outline-none focus:ring-2 focus:ring-brand-green/30 focus:bg-white transition-all">
-                    </div>
-                </div>
+    <!-- Main Content Container -->
+    <main class="flex-1 flex flex-col min-w-0 bg-cream-100 overflow-y-auto max-h-screen">
 
-                <!-- Action Toolbar -->
-                <div class="flex items-center gap-3">
-                    <!-- Status Filter Dropdown -->
-                    <select id="status-filter" onchange="renderApp()" class="bg-brand-cardCream border border-brand-borderCream rounded-lg px-3 py-2 text-xs font-medium text-brand-darkText focus:outline-none focus:ring-2 focus:ring-brand-green/30 cursor-pointer">
-                        <option value="all">All Statuses</option>
-                        <option value="reading">Currently Reading</option>
-                        <option value="want">Want to Read</option>
-                        <option value="finished">Finished</option>
-                        <option value="aside">Set Aside</option>
-                    </select>
+        <!-- Top Header Controls -->
+        <header class="bg-cream-50 border-b border-cream-200 px-6 py-4 flex flex-wrap items-center justify-between gap-4 sticky top-0 z-10 shadow-sm">
+            <div class="flex items-center gap-4">
+                <h2 id="page-title" class="serif-title text-2xl font-bold text-forest-800">My Library</h2>
+                <span id="book-count-badge" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-cream-200 text-forest-800">26 books</span>
+            </div>
 
-                    <!-- Display Mode Switcher (Library view only) -->
-                    <div id="view-mode-toggle" class="flex bg-brand-cardCream border border-brand-borderCream rounded-lg p-1">
-                        <button onclick="setDisplayMode('shelves')" id="mode-shelves-btn" class="px-3 py-1 text-xs font-semibold rounded-md bg-white text-brand-darkText shadow-sm transition-all">
-                            <i class="fa-solid fa-grip-vertical mr-1"></i> Shelves
-                        </button>
-                        <button onclick="setDisplayMode('list')" id="mode-list-btn" class="px-3 py-1 text-xs font-semibold rounded-md text-brand-mutedText hover:text-brand-darkText transition-all">
-                            <i class="fa-solid fa-list mr-1"></i> List
-                        </button>
-                    </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openBookModal()" class="flex items-center gap-2 bg-forest-800 hover:bg-forest-700 text-cream-50 px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all transform active:scale-95">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span>Add a book</span>
+                </button>
+            </div>
+        </header>
 
-                    <!-- Add Book Button -->
-                    <button onclick="openBookModal()" class="bg-brand-green hover:bg-brand-darkGreen text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all flex items-center gap-2">
-                        <i class="fa-solid fa-plus"></i> Add a book
-                    </button>
-                </div>
-            </header>
+        <!-- Dynamic Tab Views -->
+        <div class="p-6 max-w-7xl w-full mx-auto space-y-6">
 
-            <div id="content-container" class="p-8 flex-1">
-                
-                <!-- VIEW 1: LIBRARY (Shelves & List) -->
-                <section id="view-library" class="space-y-6">
-                    <!-- Counter stats bar -->
-                    <div class="flex items-center justify-between text-xs text-brand-mutedText font-medium px-1">
-                        <span id="library-count-summary">26 of 26 books • Showing all</span>
-                        <div class="flex gap-4">
-                            <span><strong class="text-brand-darkText" id="stat-reading">3</strong> reading</span>
-                            <span><strong class="text-brand-darkText" id="stat-want">6</strong> want to read</span>
-                            <span><strong class="text-brand-darkText" id="stat-finished">16</strong> finished</span>
+            <!-- 1. MY LIBRARY TAB -->
+            <section id="tab-library" class="tab-content space-y-6">
+                <!-- Filter & Search Toolbar -->
+                <div class="bg-cream-50 p-4 rounded-xl border border-cream-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex flex-wrap items-center gap-3 flex-1 min-w-[280px]">
+                        <!-- Search Box -->
+                        <div class="relative flex-1 min-w-[200px]">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-cream-300 text-sm"></i>
+                            <input type="text" id="search-input" oninput="applyFilters()" placeholder="Search title or author..." class="w-full pl-9 pr-4 py-2 rounded-lg text-sm border border-cream-200 bg-white focus:outline-none focus:border-forest-700 text-forest-900">
                         </div>
+
+                        <!-- Status Filter Dropdown -->
+                        <select id="status-filter" onchange="applyFilters()" class="px-3 py-2 rounded-lg text-sm border border-cream-200 bg-white text-forest-900 font-medium focus:outline-none focus:border-forest-700">
+                            <option value="ALL">All Reading States</option>
+                            <option value="READING">Currently Reading</option>
+                            <option value="WANT_TO_READ">Want to Read</option>
+                            <option value="FINISHED">Finished</option>
+                            <option value="SET_ASIDE">Set Aside</option>
+                        </select>
                     </div>
 
-                    <!-- Shelves Display -->
-                    <div id="shelves-wrapper" class="bookshelf-container p-6 space-y-12">
-                        <!-- Dynamic Wooden Shelves rendered by JavaScript -->
+                    <!-- View Switcher Toggle -->
+                    <div class="flex items-center bg-cream-200 p-1 rounded-lg">
+                        <button id="view-shelves-btn" onclick="switchLibraryView('shelves')" class="px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 transition-all bg-white text-forest-800 shadow-sm">
+                            <i class="fa-solid fa-border-all"></i>
+                            <span>Shelves</span>
+                        </button>
+                        <button id="view-list-btn" onclick="switchLibraryView('list')" class="px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 transition-all text-forest-900/70 hover:text-forest-900">
+                            <i class="fa-solid fa-list"></i>
+                            <span>List</span>
+                        </button>
                     </div>
+                </div>
 
-                    <!-- List Display (Hidden by default) -->
-                    <div id="list-wrapper" class="hidden bg-brand-cardCream border border-brand-borderCream rounded-xl overflow-hidden shadow-sm">
-                        <table class="w-full text-left text-xs text-brand-darkText border-collapse">
-                            <thead>
-                                <tr class="border-b border-brand-borderCream bg-brand-cardCream/80 text-brand-mutedText font-semibold">
-                                    <th class="p-4">Book</th>
-                                    <th class="p-4">Author</th>
-                                    <th class="p-4">Status</th>
-                                    <th class="p-4">Rating</th>
-                                    <th class="p-4">Format</th>
-                                    <th class="p-4 text-right">Actions</th>
+                <!-- Shelves Display Container -->
+                <div id="shelves-view" class="shelf-container">
+                    <div id="bookshelf-grid" class="space-y-2">
+                        <!-- Dynamic Wooden Shelves will be generated here -->
+                    </div>
+                </div>
+
+                <!-- Tabular List Display Container -->
+                <div id="list-view" class="hidden bg-cream-50 rounded-xl border border-cream-200 shadow-sm overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm text-forest-900">
+                            <thead class="bg-cream-200/60 text-xs uppercase font-semibold text-forest-800 border-b border-cream-200">
+                                <tr>
+                                    <th class="px-6 py-3.5">Book</th>
+                                    <th class="px-6 py-3.5">Status</th>
+                                    <th class="px-6 py-3.5">Rating</th>
+                                    <th class="px-6 py-3.5">Date Finished</th>
+                                    <th class="px-6 py-3.5">Total Pages</th>
+                                    <th class="px-6 py-3.5 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="list-table-body" class="divide-y divide-brand-borderCream/60">
-                                <!-- Dynamic Table Rows -->
+                            <tbody id="book-table-body" class="divide-y divide-cream-200">
+                                <!-- Dynamic List rows -->
                             </tbody>
                         </table>
                     </div>
-                </section>
+                </div>
+            </section>
 
-                <!-- VIEW 2: ALL NOTES -->
-                <section id="view-notes" class="hidden space-y-6 max-w-4xl mx-auto">
-                    <div class="flex items-center justify-between border-b border-brand-borderCream pb-4">
-                        <div>
-                            <h3 class="font-serif text-xl font-bold text-brand-darkText">All Notes & Quotes</h3>
-                            <p class="text-xs text-brand-mutedText">Thoughts, key passages, and connections saved across your reading</p>
+            <!-- 2. ALL NOTES & CONNECTIONS TAB -->
+            <section id="tab-notes" class="tab-content hidden space-y-6">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-cream-50 p-6 rounded-xl border border-cream-200 shadow-sm">
+                    <div>
+                        <h3 class="serif-title text-xl font-bold text-forest-800">Find it. Edit it. Connect it.</h3>
+                        <p class="text-sm text-forest-900/70 mt-1">Turn saved thoughts into connected ideas across your library.</p>
+                    </div>
+                    <button onclick="openNoteModal()" class="bg-forest-800 hover:bg-forest-700 text-cream-50 px-4 py-2 rounded-lg text-sm font-medium shadow-sm transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                        <span>Add a note</span>
+                    </button>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Left: Notes List -->
+                    <div class="lg:col-span-1 bg-cream-50 rounded-xl border border-cream-200 p-4 shadow-sm space-y-4">
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-cream-300 text-sm"></i>
+                            <input type="text" id="note-search" oninput="renderNotesList()" placeholder="Search notes or ideas..." class="w-full pl-9 pr-4 py-2 rounded-lg text-sm border border-cream-200 bg-white text-forest-900 focus:outline-none focus:border-forest-700">
                         </div>
-                        <button onclick="openNoteModal()" class="bg-brand-green text-white text-xs px-3.5 py-2 rounded-lg font-medium hover:bg-brand-darkGreen transition">
-                            <i class="fa-solid fa-plus mr-1"></i> Add a note
+                        <div id="notes-list" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+                            <!-- Dynamic Notes Cards -->
+                        </div>
+                    </div>
+
+                    <!-- Right: Note Details & Connection Graph Canvas -->
+                    <div class="lg:col-span-2 space-y-6">
+                        <!-- Active Note Details Panel -->
+                        <div id="active-note-panel" class="bg-cream-50 rounded-xl border border-cream-200 p-6 shadow-sm min-h-[220px]">
+                            <p class="text-sm text-center text-forest-900/50 py-12">Select a note from the left to view details and manage connections.</p>
+                        </div>
+
+                        <!-- Visual Connections Graph Panel -->
+                        <div class="bg-cream-50 rounded-xl border border-cream-200 p-6 shadow-sm">
+                            <h4 class="serif-title font-bold text-forest-800 mb-2 flex items-center gap-2">
+                                <i class="fa-solid fa-diagram-project text-forest-700"></i>
+                                <span>Idea Connections Network</span>
+                            </h4>
+                            <p class="text-xs text-forest-900/60 mb-4">Interactive node view showing relationships between thoughts in your books.</p>
+                            
+                            <div class="relative w-full h-[320px] bg-white rounded-lg border border-cream-200 overflow-hidden">
+                                <canvas id="network-canvas" class="w-full h-full block cursor-grab active:cursor-grabbing"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. READING OVERVIEW TAB -->
+            <section id="tab-overview" class="tab-content hidden space-y-6">
+                <!-- STREAK BANNER -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-gradient-to-r from-amber-500/10 to-orange-500/10 bg-cream-50 p-5 rounded-xl border border-amber-200/80 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-500/20 text-amber-700 flex items-center justify-center text-2xl flex-shrink-0">
+                            <i class="fa-solid fa-fire animate-bounce"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-amber-900/70">Current Streak</span>
+                            <div class="flex items-baseline gap-2 mt-0.5">
+                                <p id="stat-current-streak" class="serif-title text-3xl font-bold text-amber-800">0</p>
+                                <span class="text-sm font-semibold text-amber-900/70">days in a row</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-gradient-to-r from-forest-700/10 to-emerald-600/10 bg-cream-50 p-5 rounded-xl border border-forest-700/20 shadow-sm flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-forest-800/15 text-forest-800 flex items-center justify-center text-2xl flex-shrink-0">
+                            <i class="fa-solid fa-trophy text-gold"></i>
+                        </div>
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-forest-900/70">Max Streak</span>
+                            <div class="flex items-baseline gap-2 mt-0.5">
+                                <p id="stat-max-streak" class="serif-title text-3xl font-bold text-forest-800">0</p>
+                                <span class="text-sm font-semibold text-forest-900/70">best record</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Summary Stats Cards -->
+                <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div class="bg-cream-50 p-5 rounded-xl border border-cream-200 shadow-sm">
+                        <span class="text-xs font-semibold uppercase text-forest-900/60">Total Books</span>
+                        <p id="stat-total-books" class="serif-title text-3xl font-bold text-forest-800 mt-2">0</p>
+                    </div>
+                    <div class="bg-cream-50 p-5 rounded-xl border border-cream-200 shadow-sm">
+                        <span class="text-xs font-semibold uppercase text-forest-900/60">Books Finished</span>
+                        <p id="stat-finished-books" class="serif-title text-3xl font-bold text-forest-800 mt-2">0</p>
+                    </div>
+                    <div class="bg-cream-50 p-5 rounded-xl border border-cream-200 shadow-sm">
+                        <span class="text-xs font-semibold uppercase text-forest-900/60">Average Rating</span>
+                        <p id="stat-avg-rating" class="serif-title text-3xl font-bold text-forest-800 mt-2">0.0 <span class="text-sm font-normal text-cream-300">/ 5</span></p>
+                    </div>
+                    <div class="bg-cream-50 p-5 rounded-xl border border-cream-200 shadow-sm">
+                        <span class="text-xs font-semibold uppercase text-forest-900/60">Currently Reading</span>
+                        <p id="stat-reading-books" class="serif-title text-3xl font-bold text-forest-800 mt-2">0</p>
+                    </div>
+                    <div class="bg-cream-50 p-5 rounded-xl border border-cream-200 shadow-sm">
+                        <span class="text-xs font-semibold uppercase text-forest-900/60">Total Pages in Library</span>
+                        <p id="stat-total-library-pages" class="serif-title text-3xl font-bold text-forest-800 mt-2">0</p>
+                    </div>
+                </div>
+
+                <!-- Monthly Progress Chart Bar -->
+                <div class="bg-cream-50 p-6 rounded-xl border border-cream-200 shadow-sm">
+                    <div class="flex justify-between items-center mb-6">
+                        <div>
+                            <h3 class="serif-title text-xl font-bold text-forest-800">Books Finished by Month</h3>
+                            <p id="overview-year-subtitle" class="text-xs text-forest-900/60 mt-0.5">Year 2026 Reading Journey</p>
+                        </div>
+                        <!-- Dropdown Chọn Năm Động -->
+                        <div class="flex items-center gap-2 bg-cream-100 px-3 py-1.5 rounded-lg border border-cream-200">
+                            <label htmlFor="overview-year-select" class="text-xs font-semibold text-forest-800">Year:</label>
+                            <select id="overview-year-select" onchange="onOverviewYearChange(this.value)" class="bg-transparent text-xs font-bold text-forest-800 focus:outline-none cursor-pointer">
+                                <option value="2023">2023</option>
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026" selected>2026</option>
+                                <option value="2027">2027</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Custom CSS Bar Chart -->
+                    <div id="chart-container" class="h-60 flex items-end justify-between gap-2 pt-8 px-4 border-b border-cream-200">
+                        <!-- Dynamic Monthly Bars -->
+                    </div>
+                </div>
+
+                <!-- Cập Nhật Số Trang Đã Đọc Theo Khoảng Thời Gian -->
+                <div class="bg-cream-50 p-6 rounded-xl border border-cream-200 shadow-sm space-y-4">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-cream-200 pb-4">
+                        <div>
+                            <h3 class="serif-title text-xl font-bold text-forest-800">Pages Read Tracker</h3>
+                            <p class="text-xs text-forest-900/60 mt-0.5">Filter and review total pages read across custom time periods.</p>
+                        </div>
+                        
+                        <!-- Bộ Lọc Thời Gian -->
+                        <div class="flex flex-wrap items-center gap-3">
+                            <select id="page-time-range" onchange="handleTimeRangeChange(this.value)" class="px-3 py-1.5 rounded-lg text-xs font-semibold border border-cream-200 bg-white text-forest-800 focus:outline-none focus:border-forest-700">
+                                <option value="this_week">This Week</option>
+                                <option value="this_month" selected>This Month</option>
+                                <option value="this_year">This Year</option>
+                                <option value="custom">Custom Range</option>
+                            </select>
+
+                            <div id="custom-date-range-container" class="hidden flex items-center gap-2">
+                                <input type="date" id="range-start-date" onchange="calculateFilteredPagesRead()" class="px-2 py-1 rounded text-xs border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
+                                <span class="text-xs text-forest-900/60">to</span>
+                                <input type="date" id="range-end-date" onchange="calculateFilteredPagesRead()" class="px-2 py-1 rounded text-xs border border-cream-200 bg-white focus:outline-none focus:border-forest-700">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hiển thị Thống Kê Số Trang Đã Đọc -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
+                        <div class="bg-cream-100/60 p-4 rounded-lg border border-cream-200">
+                            <span class="text-xs font-semibold text-forest-900/60 uppercase">Selected Period Pages</span>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="filtered-pages-count" class="serif-title text-3xl font-bold text-forest-800">0</span>
+                                <span class="text-xs text-forest-900/70 font-medium">pages read</span>
+                            </div>
+                        </div>
+                        <div class="bg-cream-100/60 p-4 rounded-lg border border-cream-200">
+                            <span class="text-xs font-semibold text-forest-900/60 uppercase">Active Days Logged</span>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="filtered-days-count" class="serif-title text-3xl font-bold text-forest-800">0</span>
+                                <span class="text-xs text-forest-900/70 font-medium">days</span>
+                            </div>
+                        </div>
+                        <div class="bg-cream-100/60 p-4 rounded-lg border border-cream-200">
+                            <span class="text-xs font-semibold text-forest-900/60 uppercase">Daily Average</span>
+                            <div class="flex items-baseline gap-2 mt-1">
+                                <span id="filtered-daily-avg" class="serif-title text-3xl font-bold text-forest-800">0</span>
+                                <span class="text-xs text-forest-900/70 font-medium">pages / active day</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- BIỂU ĐỒ ĐƯỜNG MỚI THÊM (LINE CHART CANVAS) -->
+                    <div class="pt-4 border-t border-cream-200">
+                        <div class="flex items-center justify-between mb-3">
+                            <h4 class="serif-title font-bold text-forest-800 text-sm flex items-center gap-2">
+                                <i class="fa-solid fa-chart-line text-forest-700"></i>
+                                <span>Pages Read Trend</span>
+                            </h4>
+                            <span class="text-[11px] text-forest-900/60">Visual progress over selected period</span>
+                        </div>
+                        <div class="relative w-full h-[220px] bg-white rounded-lg border border-cream-200 p-2">
+                            <canvas id="pages-line-chart" class="w-full h-full block"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. HELP & BACKUP TAB -->
+            <section id="tab-backup" class="tab-content hidden space-y-6">
+                <div class="bg-cream-50 rounded-xl border border-cream-200 p-6 shadow-sm space-y-6">
+                    <div>
+                        <h3 class="serif-title text-xl font-bold text-forest-800">Help & Backup</h3>
+                        <p class="text-sm text-forest-900/70 mt-1">Keep your personal library, notes, ratings, and covers safe on your device.</p>
+                    </div>
+
+                    <!-- Backup Box -->
+                    <div class="p-5 rounded-xl bg-forest-800/5 border border-forest-800/15 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h4 class="font-bold text-forest-800">Export Library Data</h4>
+                            <p class="text-xs text-forest-900/70 mt-1">Download a JSON file containing all books, ratings, covers, notes, and node connections.</p>
+                        </div>
+                        <button onclick="exportBackupData()" class="bg-forest-800 hover:bg-forest-700 text-cream-50 px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-all whitespace-nowrap flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i>
+                            <span>Download Backup</span>
                         </button>
                     </div>
 
-                    <!-- Notes Grid Container -->
-                    <div id="notes-container" class="space-y-4">
-                        <!-- Dynamic notes rendered here -->
-                    </div>
-                </section>
-
-                <!-- VIEW 3: READING OVERVIEW (STATS) -->
-                <section id="view-overview" class="hidden space-y-8 max-w-5xl mx-auto">
-                    <div class="border-b border-brand-borderCream pb-4 flex items-center justify-between">
+                    <!-- Restore Box -->
+                    <div class="p-5 rounded-xl bg-cream-200/50 border border-cream-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div>
-                            <h3 class="font-serif text-2xl font-bold text-brand-darkText">Your Reading Year</h3>
-                            <p class="text-xs text-brand-mutedText">Finished books, average stars and progress breakdown</p>
+                            <h4 class="font-bold text-forest-800">Import / Restore Library</h4>
+                            <p class="text-xs text-forest-900/70 mt-1">Restore your library from a previously saved JSON backup file.</p>
                         </div>
-                        <div class="flex items-center gap-2 bg-brand-cardCream px-3 py-1.5 rounded-lg border border-brand-borderCream text-xs font-semibold">
-                            <span>Year:</span>
-                            <span class="font-serif text-sm">2026</span>
-                        </div>
+                        <label class="bg-white hover:bg-cream-100 text-forest-800 border border-cream-300 px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm transition-all cursor-pointer flex items-center gap-2">
+                            <i class="fa-solid fa-upload"></i>
+                            <span>Choose Backup File</span>
+                            <input type="file" id="import-file" accept=".json" onchange="importBackupData(event)" class="hidden">
+                        </label>
                     </div>
 
-                    <!-- Metric Cards Grid -->
-                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
-                            <p class="text-xs font-medium text-brand-mutedText">Books Finished</p>
-                            <h4 id="overview-finished-count" class="font-serif text-3xl font-bold text-brand-darkText mt-2">16</h4>
+                    <!-- Reset Options -->
+                    <div class="pt-4 border-t border-cream-200 flex justify-between items-center">
+                        <div>
+                            <h5 class="text-xs font-bold text-red-800 uppercase tracking-wider">Danger Zone</h5>
+                            <p class="text-xs text-forest-900/60">Reset library to sample default books.</p>
                         </div>
-                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
-                            <p class="text-xs font-medium text-brand-mutedText">Average Rating</p>
-                            <h4 id="overview-avg-rating" class="font-serif text-3xl font-bold text-brand-darkText mt-2">4.5 <span class="text-xs font-sans text-brand-mutedText">/ 5</span></h4>
-                        </div>
-                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
-                            <p class="text-xs font-medium text-brand-mutedText">Currently Reading</p>
-                            <h4 id="overview-reading-count" class="font-serif text-3xl font-bold text-brand-darkText mt-2">3</h4>
-                        </div>
-                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
-                            <p class="text-xs font-medium text-brand-mutedText">Notes Recorded</p>
-                            <h4 id="overview-notes-count" class="font-serif text-3xl font-bold text-brand-darkText mt-2">12</h4>
-                        </div>
+                        <button onclick="resetToDefaultData()" class="text-xs font-semibold text-red-700 hover:text-red-900 bg-red-50 hover:bg-red-100 border border-red-200 px-3 py-1.5 rounded-lg transition-colors">
+                            Reset Sample Data
+                        </button>
                     </div>
+                </div>
+            </section>
 
-                    <!-- Monthly Progress Bar Chart -->
-                    <div class="bg-brand-cardCream border border-brand-borderCream p-6 rounded-xl shadow-sm space-y-4">
-                        <h4 class="font-serif text-lg font-bold text-brand-darkText">Books Finished by Month</h4>
-                        <div class="h-44 flex items-end justify-between gap-2 pt-6 px-4 border-b border-brand-borderCream pb-2">
-                            <!-- Bars rendered dynamically -->
-                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <span class="text-[10px] font-bold text-brand-darkText">3</span>
-                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 60%"></div>
-                                <span class="text-[10px] text-brand-mutedText">Jan</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <span class="text-[10px] font-bold text-brand-darkText">2</span>
-                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 40%"></div>
-                                <span class="text-[10px] text-brand-mutedText">Feb</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <span class="text-[10px] font-bold text-brand-darkText">4</span>
-                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 80%"></div>
-                                <span class="text-[10px] text-brand-mutedText">Mar</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <span class="text-[10px] font-bold text-brand-darkText">1</span>
-                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 20%"></div>
-                                <span class="text-[10px] text-brand-mutedText">Apr</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <span class="text-[10px] font-bold text-brand-darkText">2</span>
-                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 40%"></div>
-                                <span class="text-[10px] text-brand-mutedText">May</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <span class="text-[10px] font-bold text-brand-darkText">3</span>
-                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 60%"></div>
-                                <span class="text-[10px] text-brand-mutedText">Jun</span>
-                            </div>
-                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-                                <span class="text-[10px] font-bold text-brand-darkText">1</span>
-                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 20%"></div>
-                                <span class="text-[10px] text-brand-mutedText">Jul</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- VIEW 4: HELP & BACKUP -->
-                <section id="view-backup" class="hidden max-w-3xl mx-auto space-y-6">
-                    <div class="border-b border-brand-borderCream pb-4">
-                        <h3 class="font-serif text-2xl font-bold text-brand-darkText">Help & Backup</h3>
-                        <p class="text-xs text-brand-mutedText">Export your entire reading history or restore a previous JSON backup</p>
-                    </div>
-
-                    <div class="bg-brand-cardCream border border-brand-borderCream rounded-xl p-6 space-y-6 shadow-sm">
-                        <div class="space-y-2">
-                            <h4 class="font-bold text-sm text-brand-darkText">Everyday Saving</h4>
-                            <p class="text-xs text-brand-mutedText leading-relaxed">
-                                Your records stay in your web browser on this computer. You can download a backup JSON file anytime to transfer your collection to another device or browser.
-                            </p>
-                        </div>
-
-                        <div class="pt-4 border-t border-brand-borderCream flex flex-wrap gap-4 items-center justify-between">
-                            <div>
-                                <h5 class="font-semibold text-xs text-brand-darkText">Download Data Backup</h5>
-                                <p class="text-[11px] text-brand-mutedText">Save all books, notes, ratings and status to a JSON file</p>
-                            </div>
-                            <button onclick="exportData()" class="bg-brand-green hover:bg-brand-darkGreen text-white text-xs px-4 py-2.5 rounded-lg font-medium shadow-sm transition">
-                                <i class="fa-solid fa-download mr-1"></i> Download Backup
-                            </button>
-                        </div>
-
-                        <div class="pt-4 border-t border-brand-borderCream flex flex-wrap gap-4 items-center justify-between">
-                            <div>
-                                <h5 class="font-semibold text-xs text-brand-darkText">Reset Sample Data</h5>
-                                <p class="text-[11px] text-brand-mutedText">Restore default sample library books and notes</p>
-                            </div>
-                            <button onclick="resetData()" class="bg-amber-800 hover:bg-amber-900 text-white text-xs px-4 py-2.5 rounded-lg font-medium shadow-sm transition">
-                                <i class="fa-solid fa-rotate-left mr-1"></i> Reset Library
-                            </button>
-                        </div>
-                    </div>
-                </section>
-
-            </div>
-        </main>
-    </div>
+        </div>
+    </main>
 
     <!-- ADD / EDIT BOOK MODAL -->
-    <div id="modal-book" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-brand-cream border border-brand-borderCream w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
-            <div class="bg-brand-cardCream px-6 py-4 border-b border-brand-borderCream flex justify-between items-center">
-                <h3 id="modal-book-title" class="font-serif text-lg font-bold text-brand-darkText">Add a Book</h3>
-                <button onclick="closeBookModal()" class="text-brand-mutedText hover:text-brand-darkText text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <div id="book-modal" class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden">
+        <div class="bg-cream-50 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-cream-300 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center border-b border-cream-200 pb-4 mb-4">
+                <h3 id="modal-book-title" class="serif-title text-xl font-bold text-forest-800">Add a Book</h3>
+                <button onclick="closeBookModal()" class="text-cream-300 hover:text-forest-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
-            
-            <form id="book-form" onsubmit="saveBook(event)" class="p-6 space-y-4 overflow-y-auto flex-1">
-                <input type="hidden" id="form-book-id">
-                
+
+            <form id="book-form" onsubmit="saveBook(event)" class="space-y-4">
+                <input type="hidden" id="book-id">
+
                 <div>
-                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Book Title *</label>
-                    <input type="text" id="form-title" required placeholder="e.g. Jane Eyre" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                    <label class="block text-xs font-semibold text-forest-900/80 mb-1">Book Title *</label>
+                    <input type="text" id="form-title" required placeholder="e.g. Pride and Prejudice" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-forest-900/80 mb-1">Author Name *</label>
+                    <input type="text" id="form-author" required placeholder="e.g. Jane Austen" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Author *</label>
-                        <input type="text" id="form-author" required placeholder="e.g. Charlotte Brontë" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Status</label>
-                        <select id="form-status" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
-                            <option value="finished">Finished</option>
-                            <option value="reading">Currently Reading</option>
-                            <option value="want">Want to Read</option>
-                            <option value="aside">Set Aside</option>
+                        <label class="block text-xs font-semibold text-forest-900/80 mb-1">Reading Status</label>
+                        <select id="form-status" onchange="toggleCurrentlyReadingFields()" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
+                            <option value="WANT_TO_READ">Want to Read</option>
+                            <option value="READING">Currently Reading</option>
+                            <option value="FINISHED">Finished</option>
+                            <option value="SET_ASIDE">Set Aside</option>
                         </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-forest-900/80 mb-1">Total Pages</label>
+                        <input type="number" id="form-total-pages" min="0" placeholder="e.g. 350" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
+                    </div>
+                </div>
+
+                <!-- Phân đoạn ẩn/hiện khi chọn "Currently Reading" với Nhật ký Đọc Hằng Ngày -->
+                <div id="currently-reading-container" class="hidden space-y-3 bg-cream-100/70 p-3 rounded-lg border border-cream-200">
+                    <div>
+                        <label class="block text-xs font-semibold text-forest-900/80 mb-1">Start Date</label>
+                        <input type="date" id="form-start-date" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
+                    </div>
+
+                    <!-- Khu vực Nhập Nhật Ký Đọc Hằng Ngày -->
+                    <div class="pt-2 border-t border-cream-200">
+                        <label class="block text-xs font-bold text-forest-800 mb-2">Daily Reading Tracker</label>
+                        <div class="flex items-center gap-2 mb-2">
+                            <input type="date" id="log-date-input" class="w-1/2 px-2 py-1.5 rounded text-xs border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
+                            <input type="number" id="log-pages-input" min="1" placeholder="Pages read" class="w-1/2 px-2 py-1.5 rounded text-xs border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
+                            <button type="button" onclick="addDailyLog()" class="px-3 py-1.5 bg-forest-800 hover:bg-forest-700 text-cream-50 text-xs font-medium rounded transition-colors whitespace-nowrap">
+                                + Add
+                            </button>
+                        </div>
+
+                        <!-- Danh sách hiển thị các ngày đã lưu -->
+                        <div id="daily-log-list" class="max-h-28 overflow-y-auto space-y-1 bg-white p-2 rounded border border-cream-200 text-xs">
+                            <!-- JS render entries -->
+                        </div>
+
+                        <!-- Tổng trang tính tự động -->
+                        <div class="flex justify-between items-center text-xs font-semibold text-forest-800 mt-2">
+                            <span>Total Pages Read:</span>
+                            <span id="calculated-total-pages">0</span>
+                        </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Rating (1 to 5 Stars)</label>
-                        <input type="number" id="form-rating" step="0.5" min="1" max="5" value="5" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                        <label class="block text-xs font-semibold text-forest-900/80 mb-1">My Rating (0.0 - 5.0)</label>
+                        <input type="number" id="form-rating" min="0" max="5" step="0.1" value="5" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
                     </div>
+
                     <div>
-                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Format</label>
-                        <select id="form-format" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
-                            <option value="Print">Print</option>
-                            <option value="Ebook">Ebook</option>
-                            <option value="Audiobook">Audiobook</option>
-                        </select>
+                        <label class="block text-xs font-semibold text-forest-900/80 mb-1">Finished Date</label>
+                        <input type="date" id="form-date" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Cover Image URL (Optional)</label>
-                    <input type="url" id="form-cover" placeholder="https://images.unsplash.com/..." class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
-                    <p class="text-[10px] text-brand-mutedText mt-1">Leave blank to generate a stylized book cover automatically</p>
+                    <label class="block text-xs font-semibold text-forest-900/80 mb-1">Cover Image (Upload from device)</label>
+                    <input type="file" id="form-cover-file" accept="image/*" onchange="previewCoverFile(event)" class="w-full px-3 py-1.5 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700 file:mr-3 file:py-1 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-forest-800 file:text-cream-50 hover:file:bg-forest-700 cursor-pointer">
+                    <input type="hidden" id="form-cover">
+                    <div id="cover-preview-container" class="mt-2 hidden">
+                        <p class="text-[11px] text-forest-900/60 mb-1">Preview:</p>
+                        <img id="cover-preview" src="" alt="Cover Preview" class="w-16 h-24 object-cover rounded border border-cream-300 shadow-sm">
+                    </div>
+                    <p class="text-[11px] text-forest-900/50 mt-1">Leave empty to generate a vintage styled book cover.</p>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Favorite Book?</label>
-                    <label class="inline-flex items-center gap-2 cursor-pointer">
-                        <input type="checkbox" id="form-favorite" class="rounded text-brand-green focus:ring-brand-green">
-                        <span class="text-xs text-brand-darkText">Mark as Favorite <i class="fa-solid fa-heart text-rose-700 ml-0.5"></i></span>
-                    </label>
+                    <label class="block text-xs font-semibold text-forest-900/80 mb-1">Notes / Quotes Summary</label>
+                    <textarea id="form-notes" rows="3" placeholder="Write key thoughts or quotes..." class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700"></textarea>
                 </div>
 
-                <div class="pt-4 border-t border-brand-borderCream flex justify-between items-center">
-                    <button type="button" id="delete-book-btn" onclick="deleteCurrentBook()" class="text-rose-700 hover:text-rose-900 text-xs font-semibold hidden">
-                        <i class="fa-solid fa-trash mr-1"></i> Delete
-                    </button>
-                    <div class="flex gap-2 ml-auto">
-                        <button type="button" onclick="closeBookModal()" class="px-4 py-2 border border-brand-borderCream rounded-lg text-xs font-medium text-brand-darkText hover:bg-brand-cardCream">Cancel</button>
-                        <button type="submit" class="px-4 py-2 bg-brand-green hover:bg-brand-darkGreen text-white rounded-lg text-xs font-semibold shadow-sm">Save Book</button>
-                    </div>
+                <div class="flex justify-end gap-3 pt-4 border-t border-cream-200">
+                    <button type="button" onclick="closeBookModal()" class="px-4 py-2 rounded-lg text-sm font-medium border border-cream-300 text-forest-900 hover:bg-cream-100 transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-lg text-sm font-medium bg-forest-800 text-cream-50 hover:bg-forest-700 shadow-sm transition-colors">Save Book</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- ADD NOTE MODAL -->
-    <div id="modal-note" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-brand-cream border border-brand-borderCream w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
-            <div class="bg-brand-cardCream px-6 py-4 border-b border-brand-borderCream flex justify-between items-center">
-                <h3 class="font-serif text-lg font-bold text-brand-darkText">Add Note / Quote</h3>
-                <button onclick="closeNoteModal()" class="text-brand-mutedText hover:text-brand-darkText text-lg"><i class="fa-solid fa-xmark"></i></button>
+    <div id="note-modal" class="fixed inset-0 z-50 modal-backdrop flex items-center justify-center p-4 hidden">
+        <div class="bg-cream-50 rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-cream-300">
+            <div class="flex justify-between items-center border-b border-cream-200 pb-4 mb-4">
+                <h3 class="serif-title text-xl font-bold text-forest-800">Add New Note / Idea</h3>
+                <button onclick="closeNoteModal()" class="text-cream-300 hover:text-forest-800 transition-colors">
+                    <i class="fa-solid fa-xmark text-lg"></i>
+                </button>
             </div>
-            <form onsubmit="saveNote(event)" class="p-6 space-y-4">
+
+            <form id="note-form" onsubmit="saveNote(event)" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Select Book *</label>
-                    <select id="form-note-book" required class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
-                        <!-- Dynamic Options -->
+                    <label class="block text-xs font-semibold text-forest-900/80 mb-1">Associated Book *</label>
+                    <select id="note-form-book" required class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
+                        <!-- Dynamic options -->
                     </select>
                 </div>
+
                 <div>
-                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Note Title or Theme</label>
-                    <input type="text" id="form-note-title" placeholder="e.g. Choosing a life of one's own" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                    <label class="block text-xs font-semibold text-forest-900/80 mb-1">Idea Title / Heading *</label>
+                    <input type="text" id="note-form-title" required placeholder="e.g. Choosing a life of one's own" class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700">
                 </div>
+
                 <div>
-                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Quote or Thought *</label>
-                    <textarea id="form-note-body" rows="4" required placeholder="Write your reader observations or quotes here..." class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none"></textarea>
+                    <label class="block text-xs font-semibold text-forest-900/80 mb-1">Thought / Highlight Content *</label>
+                    <textarea id="note-form-content" rows="4" required placeholder="Enter reflections, quote or observations..." class="w-full px-3 py-2 rounded-lg text-sm border border-cream-300 bg-white focus:outline-none focus:border-forest-700"></textarea>
                 </div>
-                <div class="flex justify-end gap-2 pt-2">
-                    <button type="button" onclick="closeNoteModal()" class="px-4 py-2 border border-brand-borderCream rounded-lg text-xs font-medium text-brand-darkText">Cancel</button>
-                    <button type="submit" class="px-4 py-2 bg-brand-green hover:bg-brand-darkGreen text-white rounded-lg text-xs font-semibold">Save Note</button>
+
+                <div class="flex justify-end gap-3 pt-4 border-t border-cream-200">
+                    <button type="button" onclick="closeNoteModal()" class="px-4 py-2 rounded-lg text-sm font-medium border border-cream-300 text-forest-900 hover:bg-cream-100 transition-colors">Cancel</button>
+                    <button type="submit" class="px-5 py-2 rounded-lg text-sm font-medium bg-forest-800 text-cream-50 hover:bg-forest-700 shadow-sm transition-colors">Save Note</button>
                 </div>
             </form>
         </div>
     </div>
 
     <script>
-        // Default Classic Books Pre-populated Dataset
-        const DEFAULT_BOOKS = [
-            { id: "1", title: "Jane Eyre", author: "Charlotte Brontë", status: "finished", rating: 5.0, format: "Print", favorite: true, cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80", color: "#3a2e22" },
-            { id: "2", title: "Frankenstein", author: "Mary Shelley", status: "want", rating: 4.5, format: "Print", favorite: false, cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80", color: "#1d2a23" },
-            { id: "3", title: "Pride and Prejudice", author: "Jane Austen", status: "finished", rating: 4.5, format: "Print", favorite: true, cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80", color: "#4c3829" },
-            { id: "4", title: "The Glasshouse Mystery", author: "Helen Ward", status: "finished", rating: 4.0, format: "Ebook", favorite: false, color: "#1e3d36" },
-            { id: "5", title: "Letters from the Coast", author: "Nora Finch", status: "want", rating: 4.0, format: "Print", favorite: false, color: "#2d4452" },
-            { id: "6", title: "A Room of One's Own", author: "Virginia Woolf", status: "reading", rating: 4.5, format: "Print", favorite: true, color: "#54463a" },
-            { id: "7", title: "The Picture of Dorian Gray", author: "Oscar Wilde", status: "finished", rating: 5.0, format: "Print", favorite: false, color: "#28201a" },
-            { id: "8", title: "A Kitchen in Spring", author: "Rose Hart", status: "reading", rating: 4.0, format: "Ebook", favorite: false, color: "#4d5b3d" },
-            { id: "9", title: "Persuasion", author: "Jane Austen", status: "finished", rating: 4.5, format: "Print", favorite: false, color: "#293e4d" },
-            { id: "10", title: "The Quiet City", author: "Arthur Pendelton", status: "aside", rating: 3.5, format: "Audiobook", favorite: false, color: "#38363a" },
-            { id: "11", title: "Little Women", author: "Louisa May Alcott", status: "finished", rating: 5.0, format: "Print", favorite: true, color: "#5b312b" }
+        // Sample Starter Books Data (PlannerCatCo Aesthetics)
+        const INITIAL_BOOKS = [
+            {
+                id: 'b1',
+                title: 'Jane Eyre',
+                author: 'Charlotte Brontë',
+                status: 'FINISHED',
+                totalPages: 532,
+                startDate: '2026-03-10',
+                pagesRead: 532,
+                readingLog: [],
+                rating: 5,
+                finishedDate: '2026-04-02',
+                cover: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&w=400&q=80',
+                notes: 'Love must leave room for independence and personal integrity.'
+            },
+            {
+                id: 'b2',
+                title: 'Pride and Prejudice',
+                author: 'Jane Austen',
+                status: 'FINISHED',
+                totalPages: 432,
+                startDate: '2026-01-15',
+                pagesRead: 432,
+                readingLog: [],
+                rating: 4.5,
+                finishedDate: '2026-02-16',
+                cover: 'https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80',
+                notes: 'A truth universally acknowledged regarding first impressions.'
+            },
+            {
+                id: 'b3',
+                title: 'The Picture of Dorian Gray',
+                author: 'Oscar Wilde',
+                status: 'FINISHED',
+                totalPages: 254,
+                startDate: '2025-12-20',
+                pagesRead: 254,
+                readingLog: [],
+                rating: 4.5,
+                finishedDate: '2026-01-04',
+                cover: 'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80',
+                notes: 'Art, morality and youth preserved in secrecy.'
+            },
+            {
+                id: 'b4',
+                title: 'A Room of One\'s Own',
+                author: 'Virginia Woolf',
+                status: 'READING',
+                totalPages: 112,
+                startDate: '2026-04-05',
+                pagesRead: 45,
+                readingLog: [
+                    { date: '2026-04-05', pages: 20 },
+                    { date: '2026-04-06', pages: 25 }
+                ],
+                rating: 5,
+                finishedDate: '',
+                cover: 'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?auto=format&fit=crop&w=400&q=80',
+                notes: 'A woman must have money and a room of her own if she is to write.'
+            },
+            {
+                id: 'b5',
+                title: 'Letters from the Coast',
+                author: 'Nora Finch',
+                status: 'WANT_TO_READ',
+                totalPages: 310,
+                startDate: '',
+                pagesRead: 0,
+                readingLog: [],
+                rating: 0,
+                finishedDate: '',
+                cover: 'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&w=400&q=80',
+                notes: ''
+            },
+            {
+                id: 'b6',
+                title: 'Frankenstein',
+                author: 'Mary Shelley',
+                status: 'WANT_TO_READ',
+                totalPages: 280,
+                startDate: '',
+                pagesRead: 0,
+                readingLog: [],
+                rating: 0,
+                finishedDate: '',
+                cover: 'https://images.unsplash.com/photo-1532012197267-da84d127e765?auto=format&fit=crop&w=400&q=80',
+                notes: ''
+            }
         ];
 
-        const DEFAULT_NOTES = [
-            { id: "n1", bookId: "1", title: "Choosing a life of one's own", quote: "Jane insists that love must leave room for her independence. I want to remember the difference between belonging and surrendering oneself." },
-            { id: "n2", bookId: "11", title: "Jo and the shape of a life", quote: "Jo's attachment to writing makes me think about the tension between a life expected by others and one chosen for oneself." },
-            { id: "n3", bookId: "6", title: "A space for creative thought", quote: "Intellectual freedom depends upon material things. Poetry depends upon intellectual freedom." }
+        const INITIAL_NOTES = [
+            {
+                id: 'n1',
+                bookId: 'b1',
+                title: 'Choosing a life of one\'s own',
+                content: 'Jane insists that love must leave room for her independence. I want to remember the difference between belonging and surrendering oneself.',
+                connections: ['n2']
+            },
+            {
+                id: 'n2',
+                bookId: 'b4',
+                title: 'Jo and the shape of a life',
+                content: 'Attachment to writing makes me think about the tension between a life expected by others and one chosen for oneself.',
+                connections: ['n1']
+            }
         ];
 
-        // State Management
-        let books = JSON.parse(localStorage.getItem('reading_cabinet_books')) || DEFAULT_BOOKS;
-        let notes = JSON.parse(localStorage.getItem('reading_cabinet_notes')) || DEFAULT_NOTES;
-        let currentView = 'library';
-        let displayMode = 'shelves'; // shelves | list
+        // Global State
+        let books = [];
+        let notes = [];
+        let currentTab = 'library';
+        let currentView = 'shelves';
+        let activeNoteId = null;
+        let selectedOverviewYear = 2026;
+        let activeReadingLog = [];
 
-        function saveData() {
-            localStorage.setItem('reading_cabinet_books', JSON.stringify(books));
-            localStorage.setItem('reading_cabinet_notes', JSON.stringify(notes));
+        // Initialize App
+        window.onload = function() {
+            loadData();
+            renderLibrary();
+            renderNotesList();
+            renderOverview();
+            setupNetworkCanvas();
+            window.addEventListener('resize', renderLineChart);
+        };
+
+        function loadData() {
+            const savedBooks = localStorage.getItem('pr_reading_books');
+            const savedNotes = localStorage.getItem('pr_reading_notes');
+
+            books = savedBooks ? JSON.parse(savedBooks) : INITIAL_BOOKS;
+            notes = savedNotes ? JSON.parse(savedNotes) : INITIAL_NOTES;
         }
 
-        // View Navigation
-        function switchView(view) {
-            currentView = view;
-            document.querySelectorAll('section[id^="view-"]').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`view-${view}`).classList.remove('hidden');
+        function saveData() {
+            localStorage.setItem('pr_reading_books', JSON.stringify(books));
+            localStorage.setItem('pr_reading_notes', JSON.stringify(notes));
+        }
+
+        // Navigation Switching
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
 
             document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('bg-brand-lightGreen', 'text-white');
-                btn.classList.add('text-brand-cream/80');
+                btn.classList.remove('bg-forest-700', 'text-cream-50');
+                btn.classList.add('hover:bg-forest-700/50', 'text-cream-200');
             });
-            const activeNav = document.getElementById(`nav-${view}`);
-            if(activeNav) {
-                activeNav.classList.add('bg-brand-lightGreen', 'text-white');
-                activeNav.classList.remove('text-brand-cream/80');
+            const activeNav = document.getElementById(`nav-${tab}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-forest-700', 'text-cream-50');
             }
 
-            // Title updates
-            const pageTitles = {
+            const titles = {
                 'library': 'My Library',
-                'notes': 'All Notes & Connections',
+                'notes': 'All Notes & Idea Connections',
                 'overview': 'Reading Overview',
                 'backup': 'Help & Backup'
             };
-            document.getElementById('page-title').innerText = pageTitles[view] || 'My Library';
+            document.getElementById('page-title').innerText = titles[tab] || 'My Library';
 
-            renderApp();
+            if (tab === 'overview') renderOverview();
+            if (tab === 'notes') {
+                renderNotesList();
+                drawNetwork();
+            }
         }
 
-        function setDisplayMode(mode) {
-            displayMode = mode;
-            if (mode === 'shelves') {
-                document.getElementById('shelves-wrapper').classList.remove('hidden');
-                document.getElementById('list-wrapper').classList.add('hidden');
-                document.getElementById('mode-shelves-btn').className = "px-3 py-1 text-xs font-semibold rounded-md bg-white text-brand-darkText shadow-sm transition-all";
-                document.getElementById('mode-list-btn').className = "px-3 py-1 text-xs font-semibold rounded-md text-brand-mutedText hover:text-brand-darkText transition-all";
+        function switchLibraryView(view) {
+            currentView = view;
+            const shelvesView = document.getElementById('shelves-view');
+            const listView = document.getElementById('list-view');
+            const shelvesBtn = document.getElementById('view-shelves-btn');
+            const listBtn = document.getElementById('view-list-btn');
+
+            if (view === 'shelves') {
+                shelvesView.classList.remove('hidden');
+                listView.classList.add('hidden');
+                shelvesBtn.className = 'px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 transition-all bg-white text-forest-800 shadow-sm';
+                listBtn.className = 'px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 transition-all text-forest-900/70 hover:text-forest-900';
             } else {
-                document.getElementById('shelves-wrapper').classList.add('hidden');
-                document.getElementById('list-wrapper').classList.remove('hidden');
-                document.getElementById('mode-list-btn').className = "px-3 py-1 text-xs font-semibold rounded-md bg-white text-brand-darkText shadow-sm transition-all";
-                document.getElementById('mode-shelves-btn').className = "px-3 py-1 text-xs font-semibold rounded-md text-brand-mutedText hover:text-brand-darkText transition-all";
+                shelvesView.classList.add('hidden');
+                listView.classList.remove('hidden');
+                listBtn.className = 'px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 transition-all bg-white text-forest-800 shadow-sm';
+                shelvesBtn.className = 'px-3 py-1.5 rounded-md text-xs font-semibold flex items-center gap-2 transition-all text-forest-900/70 hover:text-forest-900';
             }
         }
 
-        // Helper: Generate Rating Stars HTML
-        function getStarRatingHTML(rating) {
-            let stars = '';
-            for (let i = 1; i <= 5; i++) {
-                if (rating >= i) {
-                    stars += '<i class="fa-solid fa-star text-brand-gold"></i>';
-                } else if (rating >= i - 0.5) {
-                    stars += '<i class="fa-solid fa-star-half-stroke text-brand-gold"></i>';
-                } else {
-                    stars += '<i class="fa-regular fa-star text-brand-borderCream"></i>';
+        function applyFilters() {
+            renderLibrary();
+        }
+
+        // Hàm hỗ trợ sắp xếp tự động danh sách sách
+        function getSortedBooks(bookList) {
+            return [...bookList].sort((a, b) => {
+                // Thứ tự ưu tiên trạng thái: READING (1) -> FINISHED (2) -> Khác/WANT_TO_READ (3)
+                const getStatusPriority = (status) => {
+                    if (status === 'READING') return 1;
+                    if (status === 'FINISHED') return 2;
+                    return 3; // WANT_TO_READ, SET_ASIDE, ...
+                };
+
+                const priorityA = getStatusPriority(a.status);
+                const priorityB = getStatusPriority(b.status);
+
+                if (priorityA !== priorityB) {
+                    return priorityA - priorityB;
                 }
-            }
-            return `<span class="inline-flex gap-0.5 text-xs">${stars}</span>`;
+
+                // Nếu cùng là "FINISHED", sắp xếp ngày đọc xong từ mới nhất đến cũ nhất
+                if (a.status === 'FINISHED' && b.status === 'FINISHED') {
+                    const dateA = a.finishedDate ? new Date(a.finishedDate).getTime() : 0;
+                    const dateB = b.finishedDate ? new Date(b.finishedDate).getTime() : 0;
+                    return dateB - dateA;
+                }
+
+                // Với các nhóm khác (bao gồm WANT_TO_READ), giữ nguyên thứ tự thêm vào ban đầu
+                return 0;
+            });
         }
 
-        // Render Application
-        function renderApp() {
-            const query = document.getElementById('search-input').value.toLowerCase();
+        function renderLibrary() {
+            const search = document.getElementById('search-input').value.toLowerCase();
             const statusFilter = document.getElementById('status-filter').value;
 
-            // Filter books
-            const filteredBooks = books.filter(book => {
-                const matchesSearch = book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query);
-                const matchesStatus = statusFilter === 'all' || book.status === statusFilter;
+            const filtered = books.filter(b => {
+                const matchesSearch = b.title.toLowerCase().includes(search) || b.author.toLowerCase().includes(search);
+                const matchesStatus = statusFilter === 'ALL' || b.status === statusFilter;
                 return matchesSearch && matchesStatus;
             });
 
-            // Update Stats counters
-            document.getElementById('library-count-summary').innerText = `${filteredBooks.length} of ${books.length} books shown`;
-            document.getElementById('stat-reading').innerText = books.filter(b => b.status === 'reading').length;
-            document.getElementById('stat-want').innerText = books.filter(b => b.status === 'want').length;
-            document.getElementById('stat-finished').innerText = books.filter(b => b.status === 'finished').length;
+            // Tự động sắp xếp lại mảng đã lọc trước khi hiển thị
+            const sortedBooks = getSortedBooks(filtered);
 
-            // Render Shelves View
-            const shelvesWrapper = document.getElementById('shelves-wrapper');
-            shelvesWrapper.innerHTML = '';
+            document.getElementById('book-count-badge').innerText = `${sortedBooks.length} books`;
 
-            // Group into shelves (6 books per shelf max)
-            const booksPerShelf = 6;
-            for (let i = 0; i < filteredBooks.length; i += booksPerShelf) {
-                const shelfBooks = filteredBooks.slice(i, i + booksPerShelf);
-                
-                const shelfContainer = document.createElement('div');
-                shelfContainer.className = "flex flex-col items-center w-full";
-                
-                const shelfRow = document.createElement('div');
-                shelfRow.className = "w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 items-end px-4 pb-1";
+            // Render Wooden Shelves Grid
+            const shelfGrid = document.getElementById('bookshelf-grid');
+            shelfGrid.innerHTML = '';
 
-                shelfBooks.forEach(book => {
-                    const bookEl = document.createElement('div');
-                    bookEl.className = "relative group cursor-pointer flex flex-col items-center";
-                    bookEl.onclick = () => openBookModal(book.id);
+            if (sortedBooks.length === 0) {
+                shelfGrid.innerHTML = `<p class="text-cream-300/80 text-center py-12 italic">No books match your criteria.</p>`;
+            } else {
+                const rowElem = document.createElement('div');
+                rowElem.className = 'bookshelf-row';
 
-                    // Rating badge on top left of cover
-                    const ratingBadge = `<div class="absolute top-2 left-2 bg-brand-darkGreen/90 text-brand-gold text-[10px] font-bold px-1.5 py-0.5 rounded shadow z-10 flex items-center gap-1">
-                        <i class="fa-solid fa-star text-[9px]"></i> ${book.rating || 'N/A'}
-                    </div>`;
-
-                    const heartBadge = book.favorite ? `<div class="absolute top-2 right-2 text-rose-500 text-xs z-10"><i class="fa-solid fa-heart"></i></div>` : '';
-
-                    let coverContent = '';
-                    if (book.cover) {
-                        coverContent = `<img src="${book.cover}" alt="${book.title}" class="w-full h-44 object-cover rounded-sm shadow-md">`;
-                    } else {
-                        coverContent = `
-                            <div class="w-full h-44 rounded-sm flex flex-col justify-between p-3 text-brand-cream text-center shadow-inner" style="background-color: ${book.color || '#2d4452'}">
-                                <span class="font-serif text-xs font-bold line-clamp-3 mt-2">${book.title}</span>
-                                <span class="text-[10px] opacity-75 font-serif italic line-clamp-1">${book.author}</span>
-                            </div>
-                        `;
-                    }
-
-                    bookEl.innerHTML = `
-                        ${ratingBadge}
-                        ${heartBadge}
-                        <div class="w-full relative book-shadow border-l-2 border-white/20 rounded-sm overflow-hidden">
-                            ${coverContent}
-                        </div>
-                        <p class="text-[11px] font-serif font-semibold text-brand-cream/90 mt-2 text-center line-clamp-1 w-full">${book.title}</p>
-                    `;
-                    shelfRow.appendChild(bookEl);
+                sortedBooks.forEach(book => {
+                    rowElem.appendChild(createBookShelfCard(book));
                 });
-
-                // Fill empty slots visually
-                const remaining = booksPerShelf - shelfBooks.length;
-                for(let r=0; r<remaining; r++) {
-                    const emptySlot = document.createElement('div');
-                    emptySlot.className = "h-44 hidden md:block";
-                    shelfRow.appendChild(emptySlot);
-                }
-
-                const shelfWood = document.createElement('div');
-                shelfWood.className = "wooden-shelf w-full h-6 rounded-sm shadow-xl";
-
-                shelfContainer.appendChild(shelfRow);
-                shelfContainer.appendChild(shelfWood);
-                shelvesWrapper.appendChild(shelfContainer);
+                shelfGrid.appendChild(rowElem);
             }
 
-            if(filteredBooks.length === 0) {
-                shelvesWrapper.innerHTML = `<div class="text-center py-12 text-brand-cream/60 font-serif">No books found matching your criteria.</div>`;
-            }
+            // Render Table List View
+            const tbody = document.getElementById('book-table-body');
+            tbody.innerHTML = '';
 
-            // Render List View Table
-            const tableBody = document.getElementById('list-table-body');
-            tableBody.innerHTML = '';
-            filteredBooks.forEach(book => {
+            sortedBooks.forEach(book => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-brand-cardCream/60 transition";
+                tr.className = 'hover:bg-cream-100/60 transition-colors';
                 tr.innerHTML = `
-                    <td class="p-4 flex items-center gap-3">
-                        <div class="w-8 h-11 rounded bg-brand-green/20 overflow-hidden shrink-0">
-                            ${book.cover ? `<img src="${book.cover}" class="w-full h-full object-cover">` : `<div class="w-full h-full bg-brand-green"></div>`}
-                        </div>
+                    <td class="px-6 py-4 flex items-center gap-3">
+                        <img src="${book.cover}" alt="${book.title}" class="w-10 h-14 object-cover rounded shadow-sm" onerror="this.src='https://placehold.co/100x140/1b3b2b/f4efe6?text=${encodeURIComponent(book.title)}'">
                         <div>
-                            <span class="font-bold text-brand-darkText font-serif block">${book.title} ${book.favorite ? '<i class="fa-solid fa-heart text-rose-700 text-[10px] ml-1"></i>' : ''}</span>
+                            <div class="font-bold text-forest-800">${book.title}</div>
+                            <div class="text-xs text-forest-900/60">${book.author}</div>
                         </div>
                     </td>
-                    <td class="p-4 text-brand-mutedText font-serif">${book.author}</td>
-                    <td class="p-4">
-                        <span class="px-2 py-1 rounded text-[10px] font-semibold uppercase tracking-wider ${
-                            book.status === 'finished' ? 'bg-emerald-100 text-emerald-800' :
-                            book.status === 'reading' ? 'bg-amber-100 text-amber-800' :
-                            book.status === 'want' ? 'bg-blue-100 text-blue-800' : 'bg-gray-200 text-gray-700'
-                        }">${book.status}</span>
+                    <td class="px-6 py-4">
+                        <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold ${getStatusBadgeClass(book.status)}">
+                            ${formatStatus(book.status)}
+                        </span>
                     </td>
-                    <td class="p-4">${getStarRatingHTML(book.rating)}</td>
-                    <td class="p-4 text-brand-mutedText">${book.format || 'Print'}</td>
-                    <td class="p-4 text-right">
-                        <button onclick="openBookModal('${book.id}')" class="px-2.5 py-1 border border-brand-borderCream bg-white rounded hover:bg-brand-cardCream text-xs font-medium">Edit</button>
+                    <td class="px-6 py-4 font-medium text-amber-600">
+                        ${renderStars(book.rating)}
+                    </td>
+                    <td class="px-6 py-4 text-xs text-forest-900/70">
+                        ${book.finishedDate || '-'}
+                    </td>
+                    <td class="px-6 py-4 text-xs font-medium text-forest-900/70">
+                        ${book.totalPages ? book.totalPages + ' p.' : '-'}
+                    </td>
+                    <td class="px-6 py-4 text-right space-x-2">
+                        <button onclick="editBook('${book.id}')" class="text-xs font-semibold px-3 py-1 rounded bg-cream-200 text-forest-800 hover:bg-cream-300 transition-colors">Edit</button>
+                        <button onclick="deleteBook('${book.id}')" class="text-xs font-semibold px-2 py-1 rounded text-red-700 hover:bg-red-50 transition-colors"><i class="fa-solid fa-trash-can"></i></button>
                     </td>
                 `;
-                tableBody.appendChild(tr);
+                tbody.appendChild(tr);
             });
-
-            // Render Notes View
-            const notesContainer = document.getElementById('notes-container');
-            notesContainer.innerHTML = '';
-            notes.forEach(note => {
-                const book = books.find(b => b.id === note.bookId) || { title: 'Unknown Book', author: 'Author' };
-                const card = document.createElement('div');
-                card.className = "bg-brand-cardCream border border-brand-borderCream rounded-xl p-5 space-y-3 shadow-sm";
-                card.innerHTML = `
-                    <div class="flex items-center justify-between border-b border-brand-borderCream/60 pb-2">
-                        <span class="text-[11px] font-semibold text-brand-mutedText uppercase tracking-wider">Book: <strong class="text-brand-darkText font-serif">${book.title}</strong> (${book.author})</span>
-                        <button onclick="deleteNote('${note.id}')" class="text-brand-mutedText hover:text-rose-700 text-xs"><i class="fa-solid fa-trash"></i></button>
-                    </div>
-                    <h4 class="font-serif font-bold text-brand-darkText text-base">${note.title || 'Note'}</h4>
-                    <p class="text-xs text-brand-darkText italic leading-relaxed bg-white/60 p-3 rounded-lg border border-brand-borderCream/40 font-serif">"${note.quote}"</p>
-                `;
-                notesContainer.appendChild(card);
-            });
-
-            // Update Overview Metrics
-            const finishedBooks = books.filter(b => b.status === 'finished');
-            document.getElementById('overview-finished-count').innerText = finishedBooks.length;
-            const avgRating = finishedBooks.length ? (finishedBooks.reduce((acc, b) => acc + (parseFloat(b.rating) || 0), 0) / finishedBooks.length).toFixed(1) : "0.0";
-            document.getElementById('overview-avg-rating').innerHTML = `${avgRating} <span class="text-xs font-sans text-brand-mutedText">/ 5</span>`;
-            document.getElementById('overview-reading-count').innerText = books.filter(b => b.status === 'reading').length;
-            document.getElementById('overview-notes-count').innerText = notes.length;
         }
 
-        // Book Modal Handling
-        function openBookModal(bookId = null) {
-            const modal = document.getElementById('modal-book');
-            const form = document.getElementById('book-form');
-            form.reset();
+        function createBookShelfCard(book) {
+            const card = document.createElement('div');
+            card.className = 'book-card relative flex-shrink-0 cursor-pointer group';
+            card.style.width = '115px';
+            card.onclick = () => editBook(book.id);
 
-            if (bookId) {
-                const book = books.find(b => b.id === bookId);
-                if (book) {
-                    document.getElementById('modal-book-title').innerText = 'Edit Book Details';
-                    document.getElementById('form-book-id').value = book.id;
-                    document.getElementById('form-title').value = book.title;
-                    document.getElementById('form-author').value = book.author;
-                    document.getElementById('form-status').value = book.status;
-                    document.getElementById('form-rating').value = book.rating || 5;
-                    document.getElementById('form-format').value = book.format || 'Print';
-                    document.getElementById('form-cover').value = book.cover || '';
-                    document.getElementById('form-favorite').checked = !!book.favorite;
-                    document.getElementById('delete-book-btn').classList.remove('hidden');
+            card.innerHTML = `
+                <div class="relative rounded overflow-hidden shadow-lg bg-forest-900 border border-amber-900/40">
+                    <img src="${book.cover}" alt="${book.title}" class="w-full h-40 object-cover" onerror="this.src='https://placehold.co/115x160/1b3b2b/f4efe6?text=${encodeURIComponent(book.title)}'">
+                    ${book.rating > 0 ? `
+                        <div class="absolute top-1 left-1 bg-forest-800/90 text-gold text-[10px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-1">
+                            <i class="fa-solid fa-star text-[9px]"></i> ${book.rating}
+                        </div>
+                    ` : ''}
+                </div>
+                <div class="mt-2 text-center">
+                    <p class="text-[11px] font-bold text-cream-100 truncate w-28 mx-auto leading-tight" title="${book.title}">${book.title}</p>
+                    <p class="text-[9px] text-cream-300/70 truncate w-28 mx-auto mt-0.5">${book.author}</p>
+                </div>
+            `;
+            return card;
+        }
+
+        function formatStatus(status) {
+            switch(status) {
+                case 'READING': return 'Currently Reading';
+                case 'WANT_TO_READ': return 'Want to Read';
+                case 'FINISHED': return 'Finished';
+                case 'SET_ASIDE': return 'Set Aside';
+                default: return status;
+            }
+        }
+
+        function getStatusBadgeClass(status) {
+            switch(status) {
+                case 'READING': return 'bg-amber-100 text-amber-800';
+                case 'WANT_TO_READ': return 'bg-sky-100 text-sky-800';
+                case 'FINISHED': return 'bg-emerald-100 text-emerald-800';
+                case 'SET_ASIDE': return 'bg-gray-200 text-gray-700';
+                default: return 'bg-cream-200 text-forest-800';
+            }
+        }
+
+        function renderStars(rating) {
+            if (!rating || rating === 0) return '<span class="text-xs text-cream-300">Unrated</span>';
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (rating >= i) {
+                    stars += '<i class="fa-solid fa-star text-amber-500"></i>';
+                } else if (rating >= i - 0.5) {
+                    stars += '<i class="fa-solid fa-star-half-stroke text-amber-500"></i>';
+                } else {
+                    stars += '<i class="fa-regular fa-star text-cream-300"></i>';
                 }
+            }
+            return stars;
+        }
+
+        function previewCoverFile(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('form-cover').value = event.target.result;
+                    document.getElementById('cover-preview').src = event.target.result;
+                    document.getElementById('cover-preview-container').classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function toggleCurrentlyReadingFields() {
+            const status = document.getElementById('form-status').value;
+            const container = document.getElementById('currently-reading-container');
+            if (status === 'READING') {
+                container.classList.remove('hidden');
             } else {
-                document.getElementById('modal-book-title').innerText = 'Add a Book';
-                document.getElementById('form-book-id').value = '';
-                document.getElementById('delete-book-btn').classList.add('hidden');
+                container.classList.add('hidden');
+            }
+        }
+
+        /* --- CÁC HÀM XỬ LÝ NHẬT KÝ ĐỌC HẰNG NGÀY (DAILY READING LOG) --- */
+        function addDailyLog() {
+            const dateVal = document.getElementById('log-date-input').value;
+            const pagesVal = parseInt(document.getElementById('log-pages-input').value, 10);
+
+            if (!dateVal || isNaN(pagesVal) || pagesVal <= 0) {
+                alert('Vui lòng chọn ngày và nhập số trang hợp lệ.');
+                return;
             }
 
-            modal.classList.remove('hidden');
+            const existingIndex = activeReadingLog.findIndex(item => item.date === dateVal);
+            if (existingIndex !== -1) {
+                activeReadingLog[existingIndex].pages += pagesVal;
+            } else {
+                activeReadingLog.push({ date: dateVal, pages: pagesVal });
+            }
+
+            activeReadingLog.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            document.getElementById('log-pages-input').value = '';
+            renderDailyLogList();
+        }
+
+        function removeDailyLog(index) {
+            activeReadingLog.splice(index, 1);
+            renderDailyLogList();
+        }
+
+        function renderDailyLogList() {
+            const listContainer = document.getElementById('daily-log-list');
+            listContainer.innerHTML = '';
+
+            let total = 0;
+            if (activeReadingLog.length === 0) {
+                listContainer.innerHTML = `<p class="text-forest-900/50 italic text-center py-1">Chưa có nhật ký đọc hằng ngày.</p>`;
+            } else {
+                activeReadingLog.forEach((item, idx) => {
+                    total += item.pages;
+                    const row = document.createElement('div');
+                    row.className = 'flex justify-between items-center bg-cream-50 p-1.5 rounded border border-cream-200';
+                    row.innerHTML = `
+                        <span class="font-medium text-forest-800">${item.date}: <strong class="text-forest-900">${item.pages} trang</strong></span>
+                        <button type="button" onclick="removeDailyLog(${idx})" class="text-red-600 hover:text-red-800 text-xs px-1">
+                            <i class="fa-solid fa-xmark"></i>
+                        </button>
+                    `;
+                    listContainer.appendChild(row);
+                });
+            }
+
+            document.getElementById('calculated-total-pages').innerText = `${total} trang`;
+        }
+
+        function openBookModal(bookData = null) {
+            document.getElementById('book-form').reset();
+            document.getElementById('book-id').value = '';
+            document.getElementById('modal-book-title').innerText = 'Add a Book';
+            document.getElementById('cover-preview-container').classList.add('hidden');
+            document.getElementById('form-cover').value = '';
+            
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('log-date-input').value = today;
+
+            if (bookData) {
+                document.getElementById('modal-book-title').innerText = 'Edit Book';
+                document.getElementById('book-id').value = bookData.id;
+                document.getElementById('form-title').value = bookData.title;
+                document.getElementById('form-author').value = bookData.author;
+                document.getElementById('form-status').value = bookData.status;
+                document.getElementById('form-total-pages').value = bookData.totalPages || '';
+                document.getElementById('form-start-date').value = bookData.startDate || '';
+                document.getElementById('form-rating').value = bookData.rating || 5;
+                document.getElementById('form-date').value = bookData.finishedDate || '';
+                document.getElementById('form-cover').value = bookData.cover || '';
+                document.getElementById('form-notes').value = bookData.notes || '';
+
+                activeReadingLog = bookData.readingLog ? [...bookData.readingLog] : [];
+                if (activeReadingLog.length === 0 && bookData.pagesRead > 0) {
+                    activeReadingLog.push({
+                        date: bookData.startDate || today,
+                        pages: bookData.pagesRead
+                    });
+                }
+
+                if (bookData.cover) {
+                    document.getElementById('cover-preview').src = bookData.cover;
+                    document.getElementById('cover-preview-container').classList.remove('hidden');
+                }
+            } else {
+                activeReadingLog = [];
+            }
+
+            renderDailyLogList();
+            toggleCurrentlyReadingFields();
+            document.getElementById('book-modal').classList.remove('hidden');
         }
 
         function closeBookModal() {
-            document.getElementById('modal-book').classList.add('hidden');
+            document.getElementById('book-modal').classList.add('hidden');
+        }
+
+        function editBook(id) {
+            const book = books.find(b => b.id === id);
+            if (book) openBookModal(book);
+        }
+
+        function deleteBook(id) {
+            if (confirm('Are you sure you want to delete this book?')) {
+                books = books.filter(b => b.id !== id);
+                saveData();
+                renderLibrary();
+            }
         }
 
         function saveBook(e) {
             e.preventDefault();
-            const id = document.getElementById('form-book-id').value;
+            const id = document.getElementById('book-id').value;
             const title = document.getElementById('form-title').value;
             const author = document.getElementById('form-author').value;
             const status = document.getElementById('form-status').value;
-            const rating = parseFloat(document.getElementById('form-rating').value);
-            const format = document.getElementById('form-format').value;
-            const cover = document.getElementById('form-cover').value;
-            const favorite = document.getElementById('form-favorite').checked;
+            const totalPages = parseInt(document.getElementById('form-total-pages').value, 10) || 0;
+            const startDate = document.getElementById('form-start-date').value;
+            
+            const pagesRead = activeReadingLog.reduce((acc, curr) => acc + curr.pages, 0);
+            const rating = parseFloat(document.getElementById('form-rating').value) || 0;
+            const finishedDate = document.getElementById('form-date').value;
+            let cover = document.getElementById('form-cover').value;
+            const notesText = document.getElementById('form-notes').value;
+
+            if (!cover) {
+                cover = `https://placehold.co/300x450/1b3b2b/f4efe6?text=${encodeURIComponent(title)}`;
+            }
 
             if (id) {
-                // Update existing
                 const index = books.findIndex(b => b.id === id);
                 if (index !== -1) {
-                    books[index] = { ...books[index], title, author, status, rating, format, cover, favorite };
+                    books[index] = { 
+                        id, title, author, status, totalPages, startDate, 
+                        pagesRead, readingLog: activeReadingLog, rating, finishedDate, cover, notes: notesText 
+                    };
                 }
             } else {
-                // Add new
                 const newBook = {
-                    id: Date.now().toString(),
-                    title,
-                    author,
-                    status,
-                    rating,
-                    format,
-                    cover,
-                    favorite,
-                    color: '#2d4452'
+                    id: 'b_' + Date.now(),
+                    title, author, status, totalPages, startDate, 
+                    pagesRead, readingLog: activeReadingLog, rating, finishedDate, cover, notes: notesText
                 };
-                books.unshift(newBook);
+                books.push(newBook);
             }
 
             saveData();
             closeBookModal();
-            renderApp();
+            renderLibrary();
         }
 
-        function deleteCurrentBook() {
-            const id = document.getElementById('form-book-id').value;
-            if (id && confirm("Are you sure you want to delete this book?")) {
-                books = books.filter(b => b.id !== id);
-                notes = notes.filter(n => n.bookId !== id);
-                saveData();
-                closeBookModal();
-                renderApp();
+        function renderNotesList() {
+            const list = document.getElementById('notes-list');
+            const search = document.getElementById('note-search')?.value.toLowerCase() || '';
+
+            list.innerHTML = '';
+
+            const filteredNotes = notes.filter(n => 
+                n.title.toLowerCase().includes(search) || n.content.toLowerCase().includes(search)
+            );
+
+            filteredNotes.forEach(note => {
+                const book = books.find(b => b.id === note.bookId);
+                const card = document.createElement('div');
+                card.className = `p-3 rounded-lg border transition-all cursor-pointer ${activeNoteId === note.id ? 'bg-forest-800 text-cream-50 border-forest-800' : 'bg-white hover:bg-cream-100 text-forest-900 border-cream-200'}`;
+                card.onclick = () => selectNote(note.id);
+
+                card.innerHTML = `
+                    <p class="text-[10px] uppercase font-bold tracking-wider ${activeNoteId === note.id ? 'text-cream-300' : 'text-forest-900/50'}">${book ? book.title : 'General Note'}</p>
+                    <h5 class="font-bold text-sm mt-0.5">${note.title}</h5>
+                    <p class="text-xs line-clamp-2 mt-1 ${activeNoteId === note.id ? 'text-cream-200' : 'text-forest-900/70'}">${note.content}</p>
+                `;
+                list.appendChild(card);
+            });
+
+            if (filteredNotes.length === 0) {
+                list.innerHTML = `<p class="text-xs text-forest-900/50 text-center py-4">No notes found.</p>`;
             }
         }
 
-        // Note Modal Handling
+        function selectNote(noteId) {
+            activeNoteId = noteId;
+            renderNotesList();
+
+            const note = notes.find(n => n.id === noteId);
+            const book = books.find(b => b.id === note.bookId);
+            const panel = document.getElementById('active-note-panel');
+
+            if (!note) return;
+
+            panel.innerHTML = `
+                <div class="flex justify-between items-start">
+                    <div>
+                        <span class="text-xs uppercase font-bold text-forest-700 tracking-wider">Book: ${book ? book.title : 'Unlinked'}</span>
+                        <h3 class="serif-title text-xl font-bold text-forest-800 mt-1">${note.title}</h3>
+                    </div>
+                    <button onclick="deleteNote('${note.id}')" class="text-xs text-red-700 hover:bg-red-50 p-2 rounded transition-colors"><i class="fa-solid fa-trash"></i> Delete</button>
+                </div>
+                <p class="text-sm text-forest-900/90 mt-4 leading-relaxed bg-white p-4 rounded-lg border border-cream-200">${note.content}</p>
+                <div class="mt-4 pt-4 border-t border-cream-200 flex items-center justify-between">
+                    <span class="text-xs text-forest-900/60"><i class="fa-solid fa-link text-forest-700"></i> ${note.connections ? note.connections.length : 0} Connected ideas</span>
+                </div>
+            `;
+            drawNetwork();
+        }
+
         function openNoteModal() {
-            const modal = document.getElementById('modal-note');
-            const select = document.getElementById('form-note-book');
-            select.innerHTML = '';
-            books.forEach(b => {
-                const opt = document.createElement('option');
-                opt.value = b.id;
-                opt.innerText = `${b.title} (${b.author})`;
-                select.appendChild(opt);
-            });
-            modal.classList.remove('hidden');
+            const select = document.getElementById('note-form-book');
+            select.innerHTML = books.map(b => `<option value="${b.id}">${b.title} (${b.author})</option>`).join('');
+            document.getElementById('note-form').reset();
+            document.getElementById('note-modal').classList.remove('hidden');
         }
 
         function closeNoteModal() {
-            document.getElementById('modal-note').classList.add('hidden');
+            document.getElementById('note-modal').classList.add('hidden');
         }
 
         function saveNote(e) {
             e.preventDefault();
-            const bookId = document.getElementById('form-note-book').value;
-            const title = document.getElementById('form-note-title').value;
-            const quote = document.getElementById('form-note-body').value;
+            const bookId = document.getElementById('note-form-book').value;
+            const title = document.getElementById('note-form-title').value;
+            const content = document.getElementById('note-form-content').value;
 
-            notes.unshift({
-                id: Date.now().toString(),
+            const newNote = {
+                id: 'n_' + Date.now(),
                 bookId,
                 title,
-                quote
-            });
+                content,
+                connections: []
+            };
 
+            notes.push(newNote);
             saveData();
             closeNoteModal();
-            renderApp();
+            renderNotesList();
+            selectNote(newNote.id);
         }
 
         function deleteNote(id) {
-            notes = notes.filter(n => n.id !== id);
-            saveData();
-            renderApp();
+            if (confirm('Delete this note?')) {
+                notes = notes.filter(n => n.id !== id);
+                saveData();
+                activeNoteId = null;
+                document.getElementById('active-note-panel').innerHTML = `<p class="text-sm text-center text-forest-900/50 py-12">Select a note from the left to view details and manage connections.</p>`;
+                renderNotesList();
+                drawNetwork();
+            }
         }
 
-        // Backup Export / Reset
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ books, notes }, null, 2));
+        function setupNetworkCanvas() {
+            window.addEventListener('resize', drawNetwork);
+        }
+
+        function drawNetwork() {
+            const canvas = document.getElementById('network-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (notes.length === 0) return;
+
+            const nodes = notes.map((n, idx) => {
+                const angle = (idx / notes.length) * Math.PI * 2;
+                const radius = Math.min(canvas.width, canvas.height) * 0.3;
+                return {
+                    id: n.id,
+                    label: n.title,
+                    x: canvas.width / 2 + Math.cos(angle) * radius,
+                    y: canvas.height / 2 + Math.sin(angle) * radius
+                };
+            });
+
+            ctx.strokeStyle = '#d9cbba';
+            ctx.lineWidth = 2;
+            notes.forEach(note => {
+                const srcNode = nodes.find(n => n.id === note.id);
+                if (note.connections && srcNode) {
+                    note.connections.forEach(targetId => {
+                        const targetNode = nodes.find(n => n.id === targetId);
+                        if (targetNode) {
+                            ctx.beginPath();
+                            ctx.moveTo(srcNode.x, srcNode.y);
+                            ctx.lineTo(targetNode.x, targetNode.y);
+                            ctx.stroke();
+                        }
+                    });
+                }
+            });
+
+            nodes.forEach(node => {
+                const isSelected = activeNoteId === node.id;
+
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, isSelected ? 10 : 7, 0, Math.PI * 2);
+                ctx.fillStyle = isSelected ? '#d4af37' : '#1b3b2b';
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#f4efe6';
+                ctx.stroke();
+
+                ctx.font = isSelected ? 'bold 12px "Plus Jakarta Sans"' : '10px "Plus Jakarta Sans"';
+                ctx.fillStyle = '#2c190e';
+                ctx.fillText(node.label.length > 18 ? node.label.substring(0, 16) + '...' : node.label, node.x + 12, node.y + 4);
+            });
+        }
+
+        function onOverviewYearChange(year) {
+            selectedOverviewYear = parseInt(year, 10);
+            renderOverview();
+        }
+
+        function handleTimeRangeChange(val) {
+            const customContainer = document.getElementById('custom-date-range-container');
+            if (val === 'custom') {
+                customContainer.classList.remove('hidden');
+            } else {
+                customContainer.classList.add('hidden');
+            }
+            calculateFilteredPagesRead();
+        }
+
+        let currentFilteredLogs = [];
+
+        /* --- TÍNH TOÁN STREAK ĐỌC SÁCH --- */
+        function calculateReadingStreaks() {
+            const activeDatesSet = new Set();
+
+            books.forEach(b => {
+                if (b.readingLog && Array.isArray(b.readingLog)) {
+                    b.readingLog.forEach(log => {
+                        if (log.date && log.pages > 0) {
+                            activeDatesSet.add(log.date);
+                        }
+                    });
+                }
+            });
+
+            const uniqueDates = Array.from(activeDatesSet).sort();
+            if (uniqueDates.length === 0) {
+                return { currentStreak: 0, maxStreak: 0 };
+            }
+
+            let maxStreak = 0;
+            let tempStreak = 0;
+            let lastDate = null;
+
+            uniqueDates.forEach(dateStr => {
+                const currentDate = new Date(dateStr);
+                currentDate.setHours(0,0,0,0);
+
+                if (!lastDate) {
+                    tempStreak = 1;
+                } else {
+                    const diffTime = currentDate - lastDate;
+                    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+                    if (diffDays === 1) {
+                        tempStreak += 1;
+                    } else if (diffDays > 1) {
+                        tempStreak = 1;
+                    }
+                }
+                if (tempStreak > maxStreak) maxStreak = tempStreak;
+                lastDate = currentDate;
+            });
+
+            let currentStreak = 0;
+            const today = new Date();
+            today.setHours(0,0,0,0);
+
+            const yesterday = new Date(today);
+            yesterday.setDate(today.getDate() - 1);
+
+            let checkDate = new Date(today);
+            const todayStr = today.toISOString().split('T')[0];
+            const yesterdayStr = yesterday.toISOString().split('T')[0];
+
+            if (activeDatesSet.has(todayStr) || activeDatesSet.has(yesterdayStr)) {
+                if (!activeDatesSet.has(todayStr)) {
+                    checkDate = yesterday;
+                }
+                while (true) {
+                    const checkStr = checkDate.toISOString().split('T')[0];
+                    if (activeDatesSet.has(checkStr)) {
+                        currentStreak++;
+                        checkDate.setDate(checkDate.getDate() - 1);
+                    } else {
+                        break;
+                    }
+                }
+            }
+
+            return { currentStreak, maxStreak };
+        }
+
+        function calculateFilteredPagesRead() {
+            const rangeType = document.getElementById('page-time-range').value;
+            const now = new Date();
+            let startDate = new Date();
+            let endDate = new Date();
+
+            if (rangeType === 'this_week') {
+                const dayOfWeek = now.getDay();
+                const distanceToMonday = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+                startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - distanceToMonday);
+                startDate.setHours(0,0,0,0);
+                endDate = new Date(now.getFullYear(), now.getMonth(), startDate.getDate() + 6);
+                endDate.setHours(23,59,59,999);
+            } else if (rangeType === 'this_month') {
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                startDate.setHours(0,0,0,0);
+                endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                endDate.setHours(23,59,59,999);
+            } else if (rangeType === 'this_year') {
+                startDate = new Date(now.getFullYear(), 0, 1);
+                startDate.setHours(0,0,0,0);
+                endDate = new Date(now.getFullYear(), 11, 31);
+                endDate.setHours(23,59,59,999);
+            } else if (rangeType === 'custom') {
+                const startVal = document.getElementById('range-start-date').value;
+                const endVal = document.getElementById('range-end-date').value;
+                
+                if (startVal) {
+                    startDate = new Date(startVal);
+                    startDate.setHours(0,0,0,0);
+                } else {
+                    startDate = new Date(0);
+                }
+                
+                if (endVal) {
+                    endDate = new Date(endVal);
+                    endDate.setHours(23,59,59,999);
+                } else {
+                    endDate = new Date(8640000000000000);
+                }
+            }
+
+            let totalPagesReadInPeriod = 0;
+            const logMap = {};
+
+            books.forEach(b => {
+                if (b.readingLog && Array.isArray(b.readingLog)) {
+                    b.readingLog.forEach(log => {
+                        if (log.date) {
+                            const logDate = new Date(log.date);
+                            if (logDate >= startDate && logDate <= endDate) {
+                                totalPagesReadInPeriod += (log.pages || 0);
+                                logMap[log.date] = (logMap[log.date] || 0) + (log.pages || 0);
+                            }
+                        }
+                    });
+                }
+            });
+
+            const activeDates = Object.keys(logMap).sort((a, b) => new Date(a) - new Date(b));
+            currentFilteredLogs = activeDates.map(date => ({ date, pages: logMap[date] }));
+
+            const activeDays = activeDates.length;
+            const avg = activeDays > 0 ? (totalPagesReadInPeriod / activeDays).toFixed(1) : 0;
+
+            document.getElementById('filtered-pages-count').innerText = totalPagesReadInPeriod;
+            document.getElementById('filtered-days-count').innerText = activeDays;
+            document.getElementById('filtered-daily-avg').innerText = avg;
+
+            renderLineChart();
+        }
+
+        /* --- HÀM VẼ BIỂU ĐỒ ĐƯỜNG (PAGES READ LINE CHART) --- */
+        function renderLineChart() {
+            const canvas = document.getElementById('pages-line-chart');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (currentFilteredLogs.length === 0) {
+                ctx.font = '12px "Plus Jakarta Sans"';
+                ctx.fillStyle = '#795238';
+                ctx.textAlign = 'center';
+                ctx.fillText('No reading logs recorded for this period.', canvas.width / 2, canvas.height / 2);
+                return;
+            }
+
+            const padding = { top: 25, right: 30, bottom: 35, left: 40 };
+            const chartWidth = canvas.width - padding.left - padding.right;
+            const chartHeight = canvas.height - padding.top - padding.bottom;
+
+            const maxPages = Math.max(...currentFilteredLogs.map(l => l.pages), 10);
+
+            ctx.strokeStyle = '#e8dfd1';
+            ctx.lineWidth = 1;
+            const gridRows = 4;
+            for (let i = 0; i <= gridRows; i++) {
+                const y = padding.top + (chartHeight / gridRows) * i;
+                ctx.beginPath();
+                ctx.moveTo(padding.left, y);
+                ctx.lineTo(padding.left + chartWidth, y);
+                ctx.stroke();
+
+                const val = Math.round(maxPages - (maxPages / gridRows) * i);
+                ctx.font = '10px "Plus Jakarta Sans"';
+                ctx.fillStyle = '#1b3b2b';
+                ctx.textAlign = 'right';
+                ctx.fillText(val, padding.left - 8, y + 3);
+            }
+
+            const points = currentFilteredLogs.map((item, idx) => {
+                const x = currentFilteredLogs.length === 1
+                    ? padding.left + chartWidth / 2
+                    : padding.left + (chartWidth / (currentFilteredLogs.length - 1)) * idx;
+                const y = padding.top + chartHeight - (item.pages / maxPages) * chartHeight;
+                return { x, y, ...item };
+            });
+
+            if (points.length > 1) {
+                const gradient = ctx.createLinearGradient(0, padding.top, 0, padding.top + chartHeight);
+                gradient.addColorStop(0, 'rgba(27, 59, 43, 0.25)');
+                gradient.addColorStop(1, 'rgba(27, 59, 43, 0.0)');
+
+                ctx.beginPath();
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+                ctx.lineTo(points[points.length - 1].x, padding.top + chartHeight);
+                ctx.lineTo(points[0].x, padding.top + chartHeight);
+                ctx.closePath();
+                ctx.fillStyle = gradient;
+                ctx.fill();
+            }
+
+            ctx.beginPath();
+            ctx.strokeStyle = '#1b3b2b';
+            ctx.lineWidth = 2.5;
+            if (points.length === 1) {
+                ctx.arc(points[0].x, points[0].y, 2, 0, Math.PI * 2);
+            } else {
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let i = 1; i < points.length; i++) {
+                    ctx.lineTo(points[i].x, points[i].y);
+                }
+            }
+            ctx.stroke();
+
+            points.forEach(pt => {
+                ctx.beginPath();
+                ctx.arc(pt.x, pt.y, 4, 0, Math.PI * 2);
+                ctx.fillStyle = '#d4af37';
+                ctx.fill();
+                ctx.strokeStyle = '#1b3b2b';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                ctx.font = 'bold 10px "Plus Jakarta Sans"';
+                ctx.fillStyle = '#1b3b2b';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${pt.pages}p`, pt.x, pt.y - 8);
+
+                const shortDate = pt.date.slice(5);
+                ctx.font = '9px "Plus Jakarta Sans"';
+                ctx.fillStyle = '#4a2e1b';
+                ctx.fillText(shortDate, pt.x, padding.top + chartHeight + 15);
+            });
+        }
+
+        function renderOverview() {
+            const { currentStreak, maxStreak } = calculateReadingStreaks();
+            document.getElementById('stat-current-streak').innerText = currentStreak;
+            document.getElementById('stat-max-streak').innerText = maxStreak;
+
+            const total = books.length;
+            const finished = books.filter(b => b.status === 'FINISHED').length;
+            const reading = books.filter(b => b.status === 'READING').length;
+
+            const ratedBooks = books.filter(b => b.rating > 0);
+            const avgRating = ratedBooks.length > 0 
+                ? (ratedBooks.reduce((acc, b) => acc + b.rating, 0) / ratedBooks.length).toFixed(1)
+                : '0.0';
+
+            const totalLibraryPages = books.reduce((sum, b) => sum + (parseInt(b.totalPages, 10) || 0), 0);
+
+            document.getElementById('stat-total-books').innerText = total;
+            document.getElementById('stat-finished-books').innerText = finished;
+            document.getElementById('stat-avg-rating').innerHTML = `${avgRating} <span class="text-sm font-normal text-cream-300">/ 5</span>`;
+            document.getElementById('stat-reading-books').innerText = reading;
+            document.getElementById('stat-total-library-pages').innerText = totalLibraryPages;
+
+            const subtitle = document.getElementById('overview-year-subtitle');
+            if (subtitle) {
+                subtitle.innerText = `Year ${selectedOverviewYear} Reading Journey`;
+            }
+
+            const chart = document.getElementById('chart-container');
+            chart.innerHTML = '';
+
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const monthlyCounts = Array(12).fill(0);
+
+            books.filter(b => b.status === 'FINISHED' && b.finishedDate).forEach(b => {
+                const date = new Date(b.finishedDate);
+                if (!isNaN(date.getMonth()) && date.getFullYear() === selectedOverviewYear) {
+                    monthlyCounts[date.getMonth()]++;
+                }
+            });
+
+            const maxVal = Math.max(...monthlyCounts, 1);
+
+            months.forEach((m, idx) => {
+                const count = monthlyCounts[idx];
+                const heightPct = (count / maxVal) * 100;
+
+                const col = document.createElement('div');
+                col.className = 'flex-1 flex flex-col items-center h-full justify-end';
+                col.innerHTML = `
+                    <span class="text-[10px] font-bold text-forest-800 mb-1 ${count > 0 ? '' : 'opacity-0'}">${count}</span>
+                    <div class="w-full bg-forest-800 rounded-t-sm transition-all duration-500 hover:bg-forest-700" style="height: ${Math.max(heightPct, 6)}%; min-height: 4px;"></div>
+                    <span class="text-[10px] font-semibold text-forest-900/60 mt-2">${m}</span>
+                `;
+                chart.appendChild(col);
+            });
+
+            calculateFilteredPagesRead();
+        }
+
+        function exportBackupData() {
+            const data = {
+                books,
+                notes,
+                exportDate: new Date().toISOString()
+            };
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data, null, 2));
             const downloadAnchor = document.createElement('a');
             downloadAnchor.setAttribute("href", dataStr);
             downloadAnchor.setAttribute("download", `reading_cabinet_backup_${new Date().toISOString().slice(0,10)}.json`);
@@ -828,18 +1666,38 @@
             downloadAnchor.remove();
         }
 
-        function resetData() {
-            if (confirm("Reset library back to sample books and notes?")) {
-                books = [...DEFAULT_BOOKS];
-                notes = [...DEFAULT_NOTES];
-                saveData();
-                renderApp();
-            }
+        function importBackupData(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const parsed = JSON.parse(event.target.result);
+                    if (parsed.books && Array.isArray(parsed.books)) {
+                        books = parsed.books;
+                        notes = parsed.notes || [];
+                        saveData();
+                        renderLibrary();
+                        alert('Library successfully imported!');
+                    } else {
+                        alert('Invalid backup format.');
+                    }
+                } catch(err) {
+                    alert('Error parsing JSON backup file.');
+                }
+            };
+            reader.readAsText(file);
         }
 
-        // Initialize App on Load
-        window.onload = function() {
-            renderApp();
+        function resetToDefaultData() {
+            if (confirm('Reset your library back to starter sample books?')) {
+                books = INITIAL_BOOKS;
+                notes = INITIAL_NOTES;
+                saveData();
+                renderLibrary();
+                alert('Library reset to default samples.');
+            }
         }
     </script>
 </body>
