@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Reading Cabinet - Reading Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            green: '#1e3325',
+                            darkGreen: '#14241a',
+                            lightGreen: '#2e4a37',
+                            cream: '#f5f2eb',
+                            cardCream: '#ebe6dc',
+                            borderCream: '#ded7c8',
+                            gold: '#c5a059',
+                            darkText: '#2c332b',
+                            mutedText: '#6a7368'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['Playfair Display', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f5f2eb;
+            color: #2c332b;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* Wooden Bookshelf Styling */
+        .bookshelf-container {
+            background: linear-gradient(180deg, #18100c 0%, #291b13 100%);
+            border-radius: 8px;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8), 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+            border: 12px solid #20130c;
+        }
+        
+        .wooden-shelf {
+            background: linear-gradient(180deg, #3d2314 0%, #28170d 60%, #1a0f08 100%);
+            box-shadow: 0 -4px 6px rgba(255,255,255,0.05), inset 0 2px 3px rgba(255,255,255,0.1), 0 8px 15px rgba(0,0,0,0.6);
+            border-top: 3px solid #52311d;
+            border-bottom: 4px solid #120a05;
+            position: relative;
+        }
+
+        .book-shadow {
+            box-shadow: -4px 0px 8px rgba(0,0,0,0.5), 4px 6px 12px rgba(0,0,0,0.4);
+            transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .book-shadow:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: -6px 8px 18px rgba(0,0,0,0.6), 0 12px 20px rgba(0,0,0,0.3);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f5f2eb;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5beaf;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1e3325;
+        }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden select-none">
+
+    <div class="flex h-full w-full overflow-hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-64 bg-brand-green text-brand-cream flex flex-col justify-between p-6 shrink-0 shadow-xl z-20">
+            <div>
+                <!-- Brand / Title -->
+                <div class="mb-10 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-brand-gold/20 flex items-center justify-center border border-brand-gold/40">
+                        <i class="fa-solid fa-book-bookmark text-brand-gold text-lg"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-serif text-xl font-bold tracking-tight leading-tight">The Reading Cabinet</h1>
+                        <p class="text-xs text-brand-gold/80 italic font-serif">Books, notes & connections</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Links -->
+                <nav class="space-y-1.5">
+                    <button onclick="switchView('library')" id="nav-library" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all bg-brand-lightGreen text-white shadow-sm">
+                        <i class="fa-solid fa-shelves text-brand-gold w-5"></i>
+                        <span>My Library</span>
+                    </button>
+                    <button onclick="switchView('notes')" id="nav-notes" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-brand-cream/80 hover:bg-brand-lightGreen/50 hover:text-white">
+                        <i class="fa-solid fa-quote-left text-brand-gold/70 w-5"></i>
+                        <span>All Notes</span>
+                    </button>
+                    <button onclick="switchView('overview')" id="nav-overview" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-brand-cream/80 hover:bg-brand-lightGreen/50 hover:text-white">
+                        <i class="fa-solid fa-chart-pie text-brand-gold/70 w-5"></i>
+                        <span>Reading Overview</span>
+                    </button>
+                    <button onclick="switchView('backup')" id="nav-backup" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all text-brand-cream/80 hover:bg-brand-lightGreen/50 hover:text-white">
+                        <i class="fa-solid fa-floppy-disk text-brand-gold/70 w-5"></i>
+                        <span>Help & Backup</span>
+                    </button>
+                </nav>
+            </div>
+
+            <!-- Footer / Status info -->
+            <div class="pt-6 border-t border-brand-lightGreen/60 text-xs text-brand-cream/60 space-y-2">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Saved on this device</span>
+                </div>
+                <p class="text-[11px] opacity-75">PlannerCatCo HTML Edition</p>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col h-full bg-brand-cream overflow-y-auto">
+            
+            <!-- Top Controls Header -->
+            <header class="sticky top-0 z-10 bg-brand-cream/90 backdrop-blur-md px-8 py-5 border-b border-brand-borderCream flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-4 flex-1 max-w-xl">
+                    <h2 id="page-title" class="font-serif text-2xl font-bold text-brand-darkText mr-2">My Library</h2>
+                    
+                    <!-- Search Input -->
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-mutedText text-xs"></i>
+                        <input type="text" id="search-input" oninput="renderApp()" placeholder="Title, author, or tag..." class="w-full bg-brand-cardCream/60 border border-brand-borderCream rounded-lg pl-9 pr-4 py-2 text-sm text-brand-darkText placeholder-brand-mutedText focus:outline-none focus:ring-2 focus:ring-brand-green/30 focus:bg-white transition-all">
+                    </div>
+                </div>
+
+                <!-- Action Toolbar -->
+                <div class="flex items-center gap-3">
+                    <!-- Status Filter Dropdown -->
+                    <select id="status-filter" onchange="renderApp()" class="bg-brand-cardCream border border-brand-borderCream rounded-lg px-3 py-2 text-xs font-medium text-brand-darkText focus:outline-none focus:ring-2 focus:ring-brand-green/30 cursor-pointer">
+                        <option value="all">All Statuses</option>
+                        <option value="reading">Currently Reading</option>
+                        <option value="want">Want to Read</option>
+                        <option value="finished">Finished</option>
+                        <option value="aside">Set Aside</option>
+                    </select>
+
+                    <!-- Display Mode Switcher (Library view only) -->
+                    <div id="view-mode-toggle" class="flex bg-brand-cardCream border border-brand-borderCream rounded-lg p-1">
+                        <button onclick="setDisplayMode('shelves')" id="mode-shelves-btn" class="px-3 py-1 text-xs font-semibold rounded-md bg-white text-brand-darkText shadow-sm transition-all">
+                            <i class="fa-solid fa-grip-vertical mr-1"></i> Shelves
+                        </button>
+                        <button onclick="setDisplayMode('list')" id="mode-list-btn" class="px-3 py-1 text-xs font-semibold rounded-md text-brand-mutedText hover:text-brand-darkText transition-all">
+                            <i class="fa-solid fa-list mr-1"></i> List
+                        </button>
+                    </div>
+
+                    <!-- Add Book Button -->
+                    <button onclick="openBookModal()" class="bg-brand-green hover:bg-brand-darkGreen text-white text-xs font-semibold px-4 py-2.5 rounded-lg shadow-sm transition-all flex items-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Add a book
+                    </button>
+                </div>
+            </header>
+
+            <div id="content-container" class="p-8 flex-1">
+                
+                <!-- VIEW 1: LIBRARY (Shelves & List) -->
+                <section id="view-library" class="space-y-6">
+                    <!-- Counter stats bar -->
+                    <div class="flex items-center justify-between text-xs text-brand-mutedText font-medium px-1">
+                        <span id="library-count-summary">26 of 26 books • Showing all</span>
+                        <div class="flex gap-4">
+                            <span><strong class="text-brand-darkText" id="stat-reading">3</strong> reading</span>
+                            <span><strong class="text-brand-darkText" id="stat-want">6</strong> want to read</span>
+                            <span><strong class="text-brand-darkText" id="stat-finished">16</strong> finished</span>
+                        </div>
+                    </div>
+
+                    <!-- Shelves Display -->
+                    <div id="shelves-wrapper" class="bookshelf-container p-6 space-y-12">
+                        <!-- Dynamic Wooden Shelves rendered by JavaScript -->
+                    </div>
+
+                    <!-- List Display (Hidden by default) -->
+                    <div id="list-wrapper" class="hidden bg-brand-cardCream border border-brand-borderCream rounded-xl overflow-hidden shadow-sm">
+                        <table class="w-full text-left text-xs text-brand-darkText border-collapse">
+                            <thead>
+                                <tr class="border-b border-brand-borderCream bg-brand-cardCream/80 text-brand-mutedText font-semibold">
+                                    <th class="p-4">Book</th>
+                                    <th class="p-4">Author</th>
+                                    <th class="p-4">Status</th>
+                                    <th class="p-4">Rating</th>
+                                    <th class="p-4">Format</th>
+                                    <th class="p-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="list-table-body" class="divide-y divide-brand-borderCream/60">
+                                <!-- Dynamic Table Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- VIEW 2: ALL NOTES -->
+                <section id="view-notes" class="hidden space-y-6 max-w-4xl mx-auto">
+                    <div class="flex items-center justify-between border-b border-brand-borderCream pb-4">
+                        <div>
+                            <h3 class="font-serif text-xl font-bold text-brand-darkText">All Notes & Quotes</h3>
+                            <p class="text-xs text-brand-mutedText">Thoughts, key passages, and connections saved across your reading</p>
+                        </div>
+                        <button onclick="openNoteModal()" class="bg-brand-green text-white text-xs px-3.5 py-2 rounded-lg font-medium hover:bg-brand-darkGreen transition">
+                            <i class="fa-solid fa-plus mr-1"></i> Add a note
+                        </button>
+                    </div>
+
+                    <!-- Notes Grid Container -->
+                    <div id="notes-container" class="space-y-4">
+                        <!-- Dynamic notes rendered here -->
+                    </div>
+                </section>
+
+                <!-- VIEW 3: READING OVERVIEW (STATS) -->
+                <section id="view-overview" class="hidden space-y-8 max-w-5xl mx-auto">
+                    <div class="border-b border-brand-borderCream pb-4 flex items-center justify-between">
+                        <div>
+                            <h3 class="font-serif text-2xl font-bold text-brand-darkText">Your Reading Year</h3>
+                            <p class="text-xs text-brand-mutedText">Finished books, average stars and progress breakdown</p>
+                        </div>
+                        <div class="flex items-center gap-2 bg-brand-cardCream px-3 py-1.5 rounded-lg border border-brand-borderCream text-xs font-semibold">
+                            <span>Year:</span>
+                            <span class="font-serif text-sm">2026</span>
+                        </div>
+                    </div>
+
+                    <!-- Metric Cards Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
+                            <p class="text-xs font-medium text-brand-mutedText">Books Finished</p>
+                            <h4 id="overview-finished-count" class="font-serif text-3xl font-bold text-brand-darkText mt-2">16</h4>
+                        </div>
+                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
+                            <p class="text-xs font-medium text-brand-mutedText">Average Rating</p>
+                            <h4 id="overview-avg-rating" class="font-serif text-3xl font-bold text-brand-darkText mt-2">4.5 <span class="text-xs font-sans text-brand-mutedText">/ 5</span></h4>
+                        </div>
+                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
+                            <p class="text-xs font-medium text-brand-mutedText">Currently Reading</p>
+                            <h4 id="overview-reading-count" class="font-serif text-3xl font-bold text-brand-darkText mt-2">3</h4>
+                        </div>
+                        <div class="bg-brand-cardCream border border-brand-borderCream p-5 rounded-xl shadow-sm">
+                            <p class="text-xs font-medium text-brand-mutedText">Notes Recorded</p>
+                            <h4 id="overview-notes-count" class="font-serif text-3xl font-bold text-brand-darkText mt-2">12</h4>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Progress Bar Chart -->
+                    <div class="bg-brand-cardCream border border-brand-borderCream p-6 rounded-xl shadow-sm space-y-4">
+                        <h4 class="font-serif text-lg font-bold text-brand-darkText">Books Finished by Month</h4>
+                        <div class="h-44 flex items-end justify-between gap-2 pt-6 px-4 border-b border-brand-borderCream pb-2">
+                            <!-- Bars rendered dynamically -->
+                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <span class="text-[10px] font-bold text-brand-darkText">3</span>
+                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 60%"></div>
+                                <span class="text-[10px] text-brand-mutedText">Jan</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <span class="text-[10px] font-bold text-brand-darkText">2</span>
+                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 40%"></div>
+                                <span class="text-[10px] text-brand-mutedText">Feb</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <span class="text-[10px] font-bold text-brand-darkText">4</span>
+                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 80%"></div>
+                                <span class="text-[10px] text-brand-mutedText">Mar</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <span class="text-[10px] font-bold text-brand-darkText">1</span>
+                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 20%"></div>
+                                <span class="text-[10px] text-brand-mutedText">Apr</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <span class="text-[10px] font-bold text-brand-darkText">2</span>
+                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 40%"></div>
+                                <span class="text-[10px] text-brand-mutedText">May</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <span class="text-[10px] font-bold text-brand-darkText">3</span>
+                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 60%"></div>
+                                <span class="text-[10px] text-brand-mutedText">Jun</span>
+                            </div>
+                            <div class="flex-1 flex flex-col items-center gap-2 h-full justify-end">
+                                <span class="text-[10px] font-bold text-brand-darkText">1</span>
+                                <div class="w-full bg-brand-green/80 rounded-t hover:bg-brand-green transition-all" style="height: 20%"></div>
+                                <span class="text-[10px] text-brand-mutedText">Jul</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW 4: HELP & BACKUP -->
+                <section id="view-backup" class="hidden max-w-3xl mx-auto space-y-6">
+                    <div class="border-b border-brand-borderCream pb-4">
+                        <h3 class="font-serif text-2xl font-bold text-brand-darkText">Help & Backup</h3>
+                        <p class="text-xs text-brand-mutedText">Export your entire reading history or restore a previous JSON backup</p>
+                    </div>
+
+                    <div class="bg-brand-cardCream border border-brand-borderCream rounded-xl p-6 space-y-6 shadow-sm">
+                        <div class="space-y-2">
+                            <h4 class="font-bold text-sm text-brand-darkText">Everyday Saving</h4>
+                            <p class="text-xs text-brand-mutedText leading-relaxed">
+                                Your records stay in your web browser on this computer. You can download a backup JSON file anytime to transfer your collection to another device or browser.
+                            </p>
+                        </div>
+
+                        <div class="pt-4 border-t border-brand-borderCream flex flex-wrap gap-4 items-center justify-between">
+                            <div>
+                                <h5 class="font-semibold text-xs text-brand-darkText">Download Data Backup</h5>
+                                <p class="text-[11px] text-brand-mutedText">Save all books, notes, ratings and status to a JSON file</p>
+                            </div>
+                            <button onclick="exportData()" class="bg-brand-green hover:bg-brand-darkGreen text-white text-xs px-4 py-2.5 rounded-lg font-medium shadow-sm transition">
+                                <i class="fa-solid fa-download mr-1"></i> Download Backup
+                            </button>
+                        </div>
+
+                        <div class="pt-4 border-t border-brand-borderCream flex flex-wrap gap-4 items-center justify-between">
+                            <div>
+                                <h5 class="font-semibold text-xs text-brand-darkText">Reset Sample Data</h5>
+                                <p class="text-[11px] text-brand-mutedText">Restore default sample library books and notes</p>
+                            </div>
+                            <button onclick="resetData()" class="bg-amber-800 hover:bg-amber-900 text-white text-xs px-4 py-2.5 rounded-lg font-medium shadow-sm transition">
+                                <i class="fa-solid fa-rotate-left mr-1"></i> Reset Library
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ADD / EDIT BOOK MODAL -->
+    <div id="modal-book" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-cream border border-brand-borderCream w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div class="bg-brand-cardCream px-6 py-4 border-b border-brand-borderCream flex justify-between items-center">
+                <h3 id="modal-book-title" class="font-serif text-lg font-bold text-brand-darkText">Add a Book</h3>
+                <button onclick="closeBookModal()" class="text-brand-mutedText hover:text-brand-darkText text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="book-form" onsubmit="saveBook(event)" class="p-6 space-y-4 overflow-y-auto flex-1">
+                <input type="hidden" id="form-book-id">
+                
+                <div>
+                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Book Title *</label>
+                    <input type="text" id="form-title" required placeholder="e.g. Jane Eyre" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Author *</label>
+                        <input type="text" id="form-author" required placeholder="e.g. Charlotte Brontë" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Status</label>
+                        <select id="form-status" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                            <option value="finished">Finished</option>
+                            <option value="reading">Currently Reading</option>
+                            <option value="want">Want to Read</option>
+                            <option value="aside">Set Aside</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Rating (1 to 5 Stars)</label>
+                        <input type="number" id="form-rating" step="0.5" min="1" max="5" value="5" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-brand-darkText mb-1">Format</label>
+                        <select id="form-format" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                            <option value="Print">Print</option>
+                            <option value="Ebook">Ebook</option>
+                            <option value="Audiobook">Audiobook</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Cover Image URL (Optional)</label>
+                    <input type="url" id="form-cover" placeholder="https://images.unsplash.com/..." class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                    <p class="text-[10px] text-brand-mutedText mt-1">Leave blank to generate a stylized book cover automatically</p>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Favorite Book?</label>
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                        <input type="checkbox" id="form-favorite" class="rounded text-brand-green focus:ring-brand-green">
+                        <span class="text-xs text-brand-darkText">Mark as Favorite <i class="fa-solid fa-heart text-rose-700 ml-0.5"></i></span>
+                    </label>
+                </div>
+
+                <div class="pt-4 border-t border-brand-borderCream flex justify-between items-center">
+                    <button type="button" id="delete-book-btn" onclick="deleteCurrentBook()" class="text-rose-700 hover:text-rose-900 text-xs font-semibold hidden">
+                        <i class="fa-solid fa-trash mr-1"></i> Delete
+                    </button>
+                    <div class="flex gap-2 ml-auto">
+                        <button type="button" onclick="closeBookModal()" class="px-4 py-2 border border-brand-borderCream rounded-lg text-xs font-medium text-brand-darkText hover:bg-brand-cardCream">Cancel</button>
+                        <button type="submit" class="px-4 py-2 bg-brand-green hover:bg-brand-darkGreen text-white rounded-lg text-xs font-semibold shadow-sm">Save Book</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD NOTE MODAL -->
+    <div id="modal-note" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-brand-cream border border-brand-borderCream w-full max-w-md rounded-2xl shadow-2xl overflow-hidden">
+            <div class="bg-brand-cardCream px-6 py-4 border-b border-brand-borderCream flex justify-between items-center">
+                <h3 class="font-serif text-lg font-bold text-brand-darkText">Add Note / Quote</h3>
+                <button onclick="closeNoteModal()" class="text-brand-mutedText hover:text-brand-darkText text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="saveNote(event)" class="p-6 space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Select Book *</label>
+                    <select id="form-note-book" required class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                        <!-- Dynamic Options -->
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Note Title or Theme</label>
+                    <input type="text" id="form-note-title" placeholder="e.g. Choosing a life of one's own" class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-brand-darkText mb-1">Quote or Thought *</label>
+                    <textarea id="form-note-body" rows="4" required placeholder="Write your reader observations or quotes here..." class="w-full bg-white border border-brand-borderCream rounded-lg px-3 py-2 text-xs focus:ring-2 focus:ring-brand-green/30 focus:outline-none"></textarea>
+                </div>
+                <div class="flex justify-end gap-2 pt-2">
+                    <button type="button" onclick="closeNoteModal()" class="px-4 py-2 border border-brand-borderCream rounded-lg text-xs font-medium text-brand-darkText">Cancel</button>
+                    <button type="submit" class="px-4 py-2 bg-brand-green hover:bg-brand-darkGreen text-white rounded-lg text-xs font-semibold">Save Note</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Default Classic Books Pre-populated Dataset
+        const DEFAULT_BOOKS = [
+            { id: "1", title: "Jane Eyre", author: "Charlotte Brontë", status: "finished", rating: 5.0, format: "Print", favorite: true, cover: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=400&q=80", color: "#3a2e22" },
+            { id: "2", title: "Frankenstein", author: "Mary Shelley", status: "want", rating: 4.5, format: "Print", favorite: false, cover: "https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&w=400&q=80", color: "#1d2a23" },
+            { id: "3", title: "Pride and Prejudice", author: "Jane Austen", status: "finished", rating: 4.5, format: "Print", favorite: true, cover: "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?auto=format&fit=crop&w=400&q=80", color: "#4c3829" },
+            { id: "4", title: "The Glasshouse Mystery", author: "Helen Ward", status: "finished", rating: 4.0, format: "Ebook", favorite: false, color: "#1e3d36" },
+            { id: "5", title: "Letters from the Coast", author: "Nora Finch", status: "want", rating: 4.0, format: "Print", favorite: false, color: "#2d4452" },
+            { id: "6", title: "A Room of One's Own", author: "Virginia Woolf", status: "reading", rating: 4.5, format: "Print", favorite: true, color: "#54463a" },
+            { id: "7", title: "The Picture of Dorian Gray", author: "Oscar Wilde", status: "finished", rating: 5.0, format: "Print", favorite: false, color: "#28201a" },
+            { id: "8", title: "A Kitchen in Spring", author: "Rose Hart", status: "reading", rating: 4.0, format: "Ebook", favorite: false, color: "#4d5b3d" },
+            { id: "9", title: "Persuasion", author: "Jane Austen", status: "finished", rating: 4.5, format: "Print", favorite: false, color: "#293e4d" },
+            { id: "10", title: "The Quiet City", author: "Arthur Pendelton", status: "aside", rating: 3.5, format: "Audiobook", favorite: false, color: "#38363a" },
+            { id: "11", title: "Little Women", author: "Louisa May Alcott", status: "finished", rating: 5.0, format: "Print", favorite: true, color: "#5b312b" }
+        ];
+
+        const DEFAULT_NOTES = [
+            { id: "n1", bookId: "1", title: "Choosing a life of one's own", quote: "Jane insists that love must leave room for her independence. I want to remember the difference between belonging and surrendering oneself." },
+            { id: "n2", bookId: "11", title: "Jo and the shape of a life", quote: "Jo's attachment to writing makes me think about the tension between a life expected by others and one chosen for oneself." },
+            { id: "n3", bookId: "6", title: "A space for creative thought", quote: "Intellectual freedom depends upon material things. Poetry depends upon intellectual freedom." }
+        ];
+
+        // State Management
+        let books = JSON.parse(localStorage.getItem('reading_cabinet_books')) || DEFAULT_BOOKS;
+        let notes = JSON.parse(localStorage.getItem('reading_cabinet_notes')) || DEFAULT_NOTES;
+        let currentView = 'library';
+        let displayMode = 'shelves'; // shelves | list
+
+        function saveData() {
+            localStorage.setItem('reading_cabinet_books', JSON.stringify(books));
+            localStorage.setItem('reading_cabinet_notes', JSON.stringify(notes));
+        }
+
+        // View Navigation
+        function switchView(view) {
+            currentView = view;
+            document.querySelectorAll('section[id^="view-"]').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${view}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-lightGreen', 'text-white');
+                btn.classList.add('text-brand-cream/80');
+            });
+            const activeNav = document.getElementById(`nav-${view}`);
+            if(activeNav) {
+                activeNav.classList.add('bg-brand-lightGreen', 'text-white');
+                activeNav.classList.remove('text-brand-cream/80');
+            }
+
+            // Title updates
+            const pageTitles = {
+                'library': 'My Library',
+                'notes': 'All Notes & Connections',
+                'overview': 'Reading Overview',
+                'backup': 'Help & Backup'
+            };
+            document.getElementById('page-title').innerText = pageTitles[view] || 'My Library';
+
+            renderApp();
+        }
+
+        function setDisplayMode(mode) {
+            displayMode = mode;
+            if (mode === 'shelves') {
+                document.getElementById('shelves-wrapper').classList.remove('hidden');
+                document.getElementById('list-wrapper').classList.add('hidden');
+                document.getElementById('mode-shelves-btn').className = "px-3 py-1 text-xs font-semibold rounded-md bg-white text-brand-darkText shadow-sm transition-all";
+                document.getElementById('mode-list-btn').className = "px-3 py-1 text-xs font-semibold rounded-md text-brand-mutedText hover:text-brand-darkText transition-all";
+            } else {
+                document.getElementById('shelves-wrapper').classList.add('hidden');
+                document.getElementById('list-wrapper').classList.remove('hidden');
+                document.getElementById('mode-list-btn').className = "px-3 py-1 text-xs font-semibold rounded-md bg-white text-brand-darkText shadow-sm transition-all";
+                document.getElementById('mode-shelves-btn').className = "px-3 py-1 text-xs font-semibold rounded-md text-brand-mutedText hover:text-brand-darkText transition-all";
+            }
+        }
+
+        // Helper: Generate Rating Stars HTML
+        function getStarRatingHTML(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                if (rating >= i) {
+                    stars += '<i class="fa-solid fa-star text-brand-gold"></i>';
+                } else if (rating >= i - 0.5) {
+                    stars += '<i class="fa-solid fa-star-half-stroke text-brand-gold"></i>';
+                } else {
+                    stars += '<i class="fa-regular fa-star text-brand-borderCream"></i>';
+                }
+            }
+            return `<span class="inline-flex gap-0.5 text-xs">${stars}</span>`;
+        }
+
+        // Render Application
+        function renderApp() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+
+            // Filter books
+            const filteredBooks = books.filter(book => {
+                const matchesSearch = book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query);
+                const matchesStatus = statusFilter === 'all' || book.status === statusFilter;
+                return matchesSearch && matchesStatus;
+            });
+
+            // Update Stats counters
+            document.getElementById('library-count-summary').innerText = `${filteredBooks.length} of ${books.length} books shown`;
+            document.getElementById('stat-reading').innerText = books.filter(b => b.status === 'reading').length;
+            document.getElementById('stat-want').innerText = books.filter(b => b.status === 'want').length;
+            document.getElementById('stat-finished').innerText = books.filter(b => b.status === 'finished').length;
+
+            // Render Shelves View
+            const shelvesWrapper = document.getElementById('shelves-wrapper');
+            shelvesWrapper.innerHTML = '';
+
+            // Group into shelves (6 books per shelf max)
+            const booksPerShelf = 6;
+            for (let i = 0; i < filteredBooks.length; i += booksPerShelf) {
+                const shelfBooks = filteredBooks.slice(i, i + booksPerShelf);
+                
+                const shelfContainer = document.createElement('div');
+                shelfContainer.className = "flex flex-col items-center w-full";
+                
+                const shelfRow = document.createElement('div');
+                shelfRow.className = "w-full grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-6 items-end px-4 pb-1";
+
+                shelfBooks.forEach(book => {
+                    const bookEl = document.createElement('div');
+                    bookEl.className = "relative group cursor-pointer flex flex-col items-center";
+                    bookEl.onclick = () => openBookModal(book.id);
+
+                    // Rating badge on top left of cover
+                    const ratingBadge = `<div class="absolute top-2 left-2 bg-brand-darkGreen/90 text-brand-gold text-[10px] font-bold px-1.5 py-0.5 rounded shadow z-10 flex items-center gap-1">
+                        <i class="fa-solid fa-star text-[9px]"></i> ${book.rating || 'N/A'}
+                    </div>`;
+
+                    const heartBadge = book.favorite ? `<div class="absolute top-2 right-2 text-rose-500 text-xs z-10"><i class="fa-solid fa-heart"></i></div>` : '';
+
+                    let coverContent = '';
+                    if (book.cover) {
+                        coverContent = `<img src="${book.cover}" alt="${book.title}" class="w-full h-44 object-cover rounded-sm shadow-md">`;
+                    } else {
+                        coverContent = `
+                            <div class="w-full h-44 rounded-sm flex flex-col justify-between p-3 text-brand-cream text-center shadow-inner" style="background-color: ${book.color || '#2d4452'}">
+                                <span class="font-serif text-xs font-bold line-clamp-3 mt-2">${book.title}</span>
+                                <span class="text-[10px] opacity-75 font-serif italic line-clamp-1">${book.author}</span>
+                            </div>
+                        `;
+                    }
+
+                    bookEl.innerHTML = `
+                        ${ratingBadge}
+                        ${heartBadge}
+                        <div class="w-full relative book-shadow border-l-2 border-white/20 rounded-sm overflow-hidden">
+                            ${coverContent}
+                        </div>
+                        <p class="text-[11px] font-serif font-semibold text-brand-cream/90 mt-2 text-center line-clamp-1 w-full">${book.title}</p>
+                    `;
+                    shelfRow.appendChild(bookEl);
+                });
+
+                // Fill empty slots visually
+                const remaining = booksPerShelf - shelfBooks.length;
+                for(let r=0; r<remaining; r++) {
+                    const emptySlot = document.createElement('div');
+                    emptySlot.className = "h-44 hidden md:block";
+                    shelfRow.appendChild(emptySlot);
+                }
+
+                const shelfWood = document.createElement('div');
+                shelfWood.className = "wooden-shelf w-full h-6 rounded-sm shadow-xl";
+
+                shelfContainer.appendChild(shelfRow);
+                shelfContainer.appendChild(shelfWood);
+                shelvesWrapper.appendChild(shelfContainer);
+            }
+
+            if(filteredBooks.length === 0) {
+                shelvesWrapper.innerHTML = `<div class="text-center py-12 text-brand-cream/60 font-serif">No books found matching your criteria.</div>`;
+            }
+
+            // Render List View Table
+            const tableBody = document.getElementById('list-table-body');
+            tableBody.innerHTML = '';
+            filteredBooks.forEach(book => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-brand-cardCream/60 transition";
+                tr.innerHTML = `
+                    <td class="p-4 flex items-center gap-3">
+                        <div class="w-8 h-11 rounded bg-brand-green/20 overflow-hidden shrink-0">
+                            ${book.cover ? `<img src="${book.cover}" class="w-full h-full object-cover">` : `<div class="w-full h-full bg-brand-green"></div>`}
+                        </div>
+                        <div>
+                            <span class="font-bold text-brand-darkText font-serif block">${book.title} ${book.favorite ? '<i class="fa-solid fa-heart text-rose-700 text-[10px] ml-1"></i>' : ''}</span>
+                        </div>
+                    </td>
+                    <td class="p-4 text-brand-mutedText font-serif">${book.author}</td>
+                    <td class="p-4">
+                        <span class="px-2 py-1 rounded text-[10px] font-semibold uppercase tracking-wider ${
+                            book.status === 'finished' ? 'bg-emerald-100 text-emerald-800' :
+                            book.status === 'reading' ? 'bg-amber-100 text-amber-800' :
+                            book.status === 'want' ? 'bg-blue-100 text-blue-800' : 'bg-gray-200 text-gray-700'
+                        }">${book.status}</span>
+                    </td>
+                    <td class="p-4">${getStarRatingHTML(book.rating)}</td>
+                    <td class="p-4 text-brand-mutedText">${book.format || 'Print'}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="openBookModal('${book.id}')" class="px-2.5 py-1 border border-brand-borderCream bg-white rounded hover:bg-brand-cardCream text-xs font-medium">Edit</button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            // Render Notes View
+            const notesContainer = document.getElementById('notes-container');
+            notesContainer.innerHTML = '';
+            notes.forEach(note => {
+                const book = books.find(b => b.id === note.bookId) || { title: 'Unknown Book', author: 'Author' };
+                const card = document.createElement('div');
+                card.className = "bg-brand-cardCream border border-brand-borderCream rounded-xl p-5 space-y-3 shadow-sm";
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-brand-borderCream/60 pb-2">
+                        <span class="text-[11px] font-semibold text-brand-mutedText uppercase tracking-wider">Book: <strong class="text-brand-darkText font-serif">${book.title}</strong> (${book.author})</span>
+                        <button onclick="deleteNote('${note.id}')" class="text-brand-mutedText hover:text-rose-700 text-xs"><i class="fa-solid fa-trash"></i></button>
+                    </div>
+                    <h4 class="font-serif font-bold text-brand-darkText text-base">${note.title || 'Note'}</h4>
+                    <p class="text-xs text-brand-darkText italic leading-relaxed bg-white/60 p-3 rounded-lg border border-brand-borderCream/40 font-serif">"${note.quote}"</p>
+                `;
+                notesContainer.appendChild(card);
+            });
+
+            // Update Overview Metrics
+            const finishedBooks = books.filter(b => b.status === 'finished');
+            document.getElementById('overview-finished-count').innerText = finishedBooks.length;
+            const avgRating = finishedBooks.length ? (finishedBooks.reduce((acc, b) => acc + (parseFloat(b.rating) || 0), 0) / finishedBooks.length).toFixed(1) : "0.0";
+            document.getElementById('overview-avg-rating').innerHTML = `${avgRating} <span class="text-xs font-sans text-brand-mutedText">/ 5</span>`;
+            document.getElementById('overview-reading-count').innerText = books.filter(b => b.status === 'reading').length;
+            document.getElementById('overview-notes-count').innerText = notes.length;
+        }
+
+        // Book Modal Handling
+        function openBookModal(bookId = null) {
+            const modal = document.getElementById('modal-book');
+            const form = document.getElementById('book-form');
+            form.reset();
+
+            if (bookId) {
+                const book = books.find(b => b.id === bookId);
+                if (book) {
+                    document.getElementById('modal-book-title').innerText = 'Edit Book Details';
+                    document.getElementById('form-book-id').value = book.id;
+                    document.getElementById('form-title').value = book.title;
+                    document.getElementById('form-author').value = book.author;
+                    document.getElementById('form-status').value = book.status;
+                    document.getElementById('form-rating').value = book.rating || 5;
+                    document.getElementById('form-format').value = book.format || 'Print';
+                    document.getElementById('form-cover').value = book.cover || '';
+                    document.getElementById('form-favorite').checked = !!book.favorite;
+                    document.getElementById('delete-book-btn').classList.remove('hidden');
+                }
+            } else {
+                document.getElementById('modal-book-title').innerText = 'Add a Book';
+                document.getElementById('form-book-id').value = '';
+                document.getElementById('delete-book-btn').classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeBookModal() {
+            document.getElementById('modal-book').classList.add('hidden');
+        }
+
+        function saveBook(e) {
+            e.preventDefault();
+            const id = document.getElementById('form-book-id').value;
+            const title = document.getElementById('form-title').value;
+            const author = document.getElementById('form-author').value;
+            const status = document.getElementById('form-status').value;
+            const rating = parseFloat(document.getElementById('form-rating').value);
+            const format = document.getElementById('form-format').value;
+            const cover = document.getElementById('form-cover').value;
+            const favorite = document.getElementById('form-favorite').checked;
+
+            if (id) {
+                // Update existing
+                const index = books.findIndex(b => b.id === id);
+                if (index !== -1) {
+                    books[index] = { ...books[index], title, author, status, rating, format, cover, favorite };
+                }
+            } else {
+                // Add new
+                const newBook = {
+                    id: Date.now().toString(),
+                    title,
+                    author,
+                    status,
+                    rating,
+                    format,
+                    cover,
+                    favorite,
+                    color: '#2d4452'
+                };
+                books.unshift(newBook);
+            }
+
+            saveData();
+            closeBookModal();
+            renderApp();
+        }
+
+        function deleteCurrentBook() {
+            const id = document.getElementById('form-book-id').value;
+            if (id && confirm("Are you sure you want to delete this book?")) {
+                books = books.filter(b => b.id !== id);
+                notes = notes.filter(n => n.bookId !== id);
+                saveData();
+                closeBookModal();
+                renderApp();
+            }
+        }
+
+        // Note Modal Handling
+        function openNoteModal() {
+            const modal = document.getElementById('modal-note');
+            const select = document.getElementById('form-note-book');
+            select.innerHTML = '';
+            books.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.innerText = `${b.title} (${b.author})`;
+                select.appendChild(opt);
+            });
+            modal.classList.remove('hidden');
+        }
+
+        function closeNoteModal() {
+            document.getElementById('modal-note').classList.add('hidden');
+        }
+
+        function saveNote(e) {
+            e.preventDefault();
+            const bookId = document.getElementById('form-note-book').value;
+            const title = document.getElementById('form-note-title').value;
+            const quote = document.getElementById('form-note-body').value;
+
+            notes.unshift({
+                id: Date.now().toString(),
+                bookId,
+                title,
+                quote
+            });
+
+            saveData();
+            closeNoteModal();
+            renderApp();
+        }
+
+        function deleteNote(id) {
+            notes = notes.filter(n => n.id !== id);
+            saveData();
+            renderApp();
+        }
+
+        // Backup Export / Reset
+        function exportData() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({ books, notes }, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `reading_cabinet_backup_${new Date().toISOString().slice(0,10)}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+        }
+
+        function resetData() {
+            if (confirm("Reset library back to sample books and notes?")) {
+                books = [...DEFAULT_BOOKS];
+                notes = [...DEFAULT_NOTES];
+                saveData();
+                renderApp();
+            }
+        }
+
+        // Initialize App on Load
+        window.onload = function() {
+            renderApp();
+        }
+    </script>
+</body>
+</html>
